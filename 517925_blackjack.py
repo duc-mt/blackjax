@@ -75,7 +75,7 @@ def display_hand(player_name, hand):
         print(hand[0][0], 'of', hand[0][1])
 
     # Output the total value.
-    print(f'Hand Total: {(get_hand_total(hand))}', end='\n\n')
+    print(f'Hand Total: ({get_hand_total(hand)})', end='\n\n')
 
 
 def get_hand_total(hand):
@@ -113,6 +113,41 @@ def get_hand_total(hand):
     return point
 
 
+def input_hit_choice():
+    """Prompt for, read, and validate the user's choice.
+
+    Returns
+    -------
+    str
+        The valid user choice which is either 'h' (hit) or 's' (stand).
+    """
+    choice = None
+    valid_choices = ['h', 's']
+
+    while choice is None or choice not in valid_choices:
+        choice = input('Do you want to hit or stand (h/s): ')
+        if choice not in valid_choices:
+            print("ERROR: Must be 'h' or 's'.")
+    print()
+
+    return choice
+
+
+def player_play(name, hand):
+    """Continue playing until the user responds 's' (stand). """
+    hit_choice = None
+
+    while hit_choice is None or hit_choice == 'h' or get_hand_total(hand) > 21:
+        hit_choice = input_hit_choice()
+
+        # if hit_choice == 'h' or get_hand_total(hand) > 21:
+        if hit_choice == 'h':
+            # Draw another card and output it.
+            hand.append(card_deck.draw_card())
+            # Output the total value.
+            display_hand(name, hand)
+
+
 def play_game():
     print("--------- Welcome to Blackjack ---------\n")
 
@@ -148,6 +183,23 @@ def play_game():
             # Display hands.
             display_hand('Dealer', dealer_hand)
             display_hand(name, player_hand)
+
+            # Check for Blackjack.
+            dealer_point = get_hand_total(dealer_hand)
+            player_point = get_hand_total(player_hand)
+            count_21 = [dealer_point, player_point].count(21)
+
+            if count_21 == 0:
+                player_play(name, player_hand)
+            elif count_21 == 2:
+                print('Two player blackjack!-> Push!')
+            else:
+                print('Blackjack', end='! ')
+                if dealer_point == 21:
+                    print('Dealer wins!')
+                else:
+                    print(f'{name} wins!')
+            print()
 
             # Reset the card once a game is complete.
             dealer_hand = []
