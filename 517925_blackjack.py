@@ -47,7 +47,7 @@ def input_name():
 
 
 def display_hand(player_name, hand):
-    """Displays the hand to the screen.
+    """Displays the hand and its total to the screen.
 
     Parameters
     ----------
@@ -60,12 +60,57 @@ def display_hand(player_name, hand):
     -------
     None
     """
-    print(f"{player_hand}'s hand: {hand[0][0]} of {hand[0][1]}", sep='')
-    if player_name = 'Dealer':
-        print()
-    else:
-        print(f", {hand[1][0]} of {hand[1][1]}"
+    # Output the hand.
+    print(f'{player_name}\'s hand', end=': ')
 
+    if player_name != 'Dealer':
+        i = 0
+        for card in hand:
+            i += 1
+            if i < len(hand):
+                print(card[0], 'of', card[1], end=', ')
+            else:
+                print(card[0], 'of', card[1])
+    else:
+        print(hand[0][0], 'of', hand[0][1])
+
+    # Output the total value.
+    print(f'Hand Total: {(get_hand_total(hand))}', end='\n\n')
+
+
+def get_hand_total(hand):
+    """Take a list of cards and returns the total point value of them.
+
+    Parameters
+    ----------
+    str
+        The cards drawn.
+
+    Returns
+    -------
+    int
+        The total point value of all card values in the 'hand'.
+    """
+    # Variable initialisation.
+    point = 0
+    count_ace = 0
+
+    # Add the value of cards.
+    for card in hand:
+        if card[0] == 'Ace':
+            count_ace += 1
+        elif card[0] in ['Jack', 'Queen', 'King']:
+            point += 10
+        else:
+            point += int(card[0])
+
+    # Determine the value of Ace cards.
+    if (point + 11*count_ace) <= 21:
+        point += 11*count_ace
+    else:
+        point += 1*count_ace
+
+    return point
 
 
 def play_game():
@@ -94,16 +139,15 @@ def play_game():
         while play == valid_answers[0]:
             rounds += 1
 
-            # Begin the game.
+            # Draw cards.
             dealer_hand.append(card_deck.draw_card())
 
             for _ in range(2):
                 player_hand.append(card_deck.draw_card())
 
-            # Display the cards.
-            print(f'Player hand: {player_hand}',
-                  f'Dealer hand: {dealer_hand}',
-                  sep='\n')
+            # Display hands.
+            display_hand('Dealer', dealer_hand)
+            display_hand(name, player_hand)
 
             # Reset the card once a game is complete.
             dealer_hand = []
@@ -127,6 +171,5 @@ def play_game():
 
 # --------------------------- Call the Main Function --------------------------
 if __name__ == '__main__':
-    # Start the game.
     play_game()
     print("\n---------- See you again soon ----------")
