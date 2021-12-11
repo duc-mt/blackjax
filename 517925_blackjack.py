@@ -62,17 +62,13 @@ def display_hand(player_name, hand):
     """
     # Output the hand.
     print(f'{player_name}\'s hand', end=': ')
-
-    if player_name != 'Dealer':
-        i = 0
-        for card in hand:
-            i += 1
-            if i < len(hand):
-                print(card[0], 'of', card[1], end=', ')
-            else:
-                print(card[0], 'of', card[1])
-    else:
-        print(hand[0][0], 'of', hand[0][1])
+    i = 0
+    for card in hand:
+        i += 1
+        if i < len(hand):
+            print(card[0], 'of', card[1], end=', ')
+        else:
+            print(card[0], 'of', card[1])
 
     # Output the total value.
     print(f'Hand Total: ({get_hand_total(hand)})', end='\n\n')
@@ -150,7 +146,7 @@ def player_play(name, hand):
     """
     user_hit = None
 
-    while user_hit is None or (user_hit == 'h' and get_hand_total(hand) <= 21):
+    while user_hit is None or (user_hit == 'h' and get_hand_total(hand) < 21):
         user_hit = input_hit_choice()
 
         if user_hit == 'h':
@@ -158,6 +154,8 @@ def player_play(name, hand):
             hand.append(card_deck.draw_card())
             # Output the total value.
             display_hand(name, hand)
+
+    return get_hand_total(hand)
 
 
 def dealer_play(hand):
@@ -174,7 +172,7 @@ def dealer_play(hand):
     """
     dealer_hit = None
 
-    while dealer_hit is None or (dealer_hit == '' and get_hand_total(hand) >= 17):
+    while dealer_hit is None or (dealer_hit == '' and get_hand_total(hand) < 17):
         # Draw another card.
         hand.append(card_deck.draw_card())
         # Output the total value.
@@ -182,6 +180,31 @@ def dealer_play(hand):
 
         dealer_hit = input('Press "Enter" to continue...')
         print()
+
+    return get_hand_total(hand)
+
+
+def add_score(name, score, filename):
+    """Read the file to check if (score) is greater than the others in the file
+
+    Parameters
+    ----------
+    name : str
+        The player's name
+    score : int
+        The player's score, calculated by [won/(games-tied)*100].
+    filename : str
+        The name of the fil containing two players' names and their scores.
+
+    Returns
+    -------
+    None
+    """
+    with open(filename, 'r') as outfile:
+        for line in outfile:
+            print(line)
+
+
 
 
 def play_game():
@@ -192,9 +215,12 @@ def play_game():
 
     # Variable initialisation.
     valid_answers = ['y', 'n']
-    rounds = 0
+    games = 0
     dealer_hand = []
     player_hand = []
+    won = 0
+    lost = 0
+    tied = 0
 
     # Ask to play.
     play = None
@@ -208,7 +234,7 @@ def play_game():
         name = input_name()
 
         while play == valid_answers[0]:
-            rounds += 1
+            games += 1
 
             # Draw cards.
             dealer_hand.append(card_deck.draw_card())
@@ -226,18 +252,49 @@ def play_game():
             count_21 = [dealer_point, player_point].count(21)
 
             if count_21 == 0:
-                player_play(name, player_hand)
-                dealer_play(dealer_hand)
+                # Should return nothing.
+                # player_play(name, player_hand)
+                # dealer_play(dealer_hand)
+
+                # Determine the winner.
+                player_point = player_play(name, player_hand)
+                dealer_point = dealer_play(dealer_hand)
+
+                if dealer_point == player_point:
+                    print(f'Dealer: {dealer_point}\t{name}: {player_point}',
+                          f'Push!',
+                          sep='  ->  ')
+                    tied += 1
+                elif (dealer_point > player_point and dealer_point <= 21) or player_point > 21:
+                    if player_point > 21:
+                        print(f'{name} bust!')
+                    print(f'Dealer: {dealer_point}\t{name}: {player_point}',
+                          f'Dealer wins!',
+                          sep='  ->  ')
+                    lost += 1
+                elif (player_point > dealer_point and player_point <= 21) or dealer_point > 21:
+                    if dealer_point > 21:
+                        print(f'Dealer bust!')
+                    print(f'Dealer: {dealer_point}\t{name}: {player_point}',
+                          f'{name} wins!',
+                          sep='  ->  ')
+                    won += 1
+
             elif count_21 == 2:
                 print('Two player blackjack!-> Push!')
-                print()
+                tied += 1
+
             else:
                 print('Blackjack', end='! ')
                 if dealer_point == 21:
                     print('Dealer wins!')
+                    lost += 1
                 else:
                     print(f'{name} wins!')
-                print()
+                    won += 1
+
+            # A line separating each game.
+            print('\n' + ('-' * 40) + '\n')
 
             # Reset the card once a game is complete.
             dealer_hand = []
@@ -253,13 +310,23 @@ def play_game():
             print()
 
         # Summary.
-        print(f'You played {rounds} games.')
+        print(f'You played {games} games.',
+              f' -> Won:\t{won}',
+              f' -> Lost:\t{lost}',
+              f' -> Tied:\t{tied}',
+              sep='\n',
+              end='\n\n')
 
+        # Check for high scores.
+        player_score = won / (games - tied) * 100
+        add_score(name, player_score, 'highscores.txt')
+
+        print('\nThanks for playing!', end='\n\n')
     else:
-        print('Maybe next time...')
+        print('Maybe next time...', end='\n\n')
 
 
 # --------------------------- Call the Main Function --------------------------
 if __name__ == '__main__':
     play_game()
-    print("\n---------- See you again soon ----------")
+    print("---------- See you again soon ----------")
