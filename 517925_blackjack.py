@@ -134,18 +134,54 @@ def input_hit_choice():
 
 
 def player_play(name, hand):
-    """Continue playing until the user responds 's' (stand). """
-    hit_choice = None
+    """Continue to draw cards until the user responds 's' (stand) or
+       their cards' total exceeds 21.
 
-    while hit_choice is None or hit_choice == 'h' or get_hand_total(hand) > 21:
-        hit_choice = input_hit_choice()
+    Parameters
+    ----------
+    name : str
+        The player's name.
+    hand : list
+        The list of cards drawn by the player.
 
-        # if hit_choice == 'h' or get_hand_total(hand) > 21:
-        if hit_choice == 'h':
-            # Draw another card and output it.
+    Returns
+    -------
+    None
+    """
+    user_hit = None
+
+    while user_hit is None or (user_hit == 'h' and get_hand_total(hand) <= 21):
+        user_hit = input_hit_choice()
+
+        if user_hit == 'h':
+            # Draw another card.
             hand.append(card_deck.draw_card())
             # Output the total value.
             display_hand(name, hand)
+
+
+def dealer_play(hand):
+    """Continue to draw cards until the dealer's cards' total reaches 17.
+
+    Parameters
+    ----------
+    list
+        The list of cards drawn by the dealer.
+
+    Returns
+    -------
+    None
+    """
+    dealer_hit = None
+
+    while dealer_hit is None or (dealer_hit == '' and get_hand_total(hand) >= 17):
+        # Draw another card.
+        hand.append(card_deck.draw_card())
+        # Output the total value.
+        display_hand('Dealer', hand)
+
+        dealer_hit = input('Press "Enter" to continue...')
+        print()
 
 
 def play_game():
@@ -191,15 +227,17 @@ def play_game():
 
             if count_21 == 0:
                 player_play(name, player_hand)
+                dealer_play(dealer_hand)
             elif count_21 == 2:
                 print('Two player blackjack!-> Push!')
+                print()
             else:
                 print('Blackjack', end='! ')
                 if dealer_point == 21:
                     print('Dealer wins!')
                 else:
                     print(f'{name} wins!')
-            print()
+                print()
 
             # Reset the card once a game is complete.
             dealer_hand = []
