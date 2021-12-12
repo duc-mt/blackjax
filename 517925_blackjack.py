@@ -200,9 +200,24 @@ def add_score(name, score, filename):
     -------
     None
     """
-    with open(filename, 'r') as outfile:
-        for line in outfile:
-            print(line)
+    with open('highscores.txt') as infile:
+        # Variable initialisation.
+        line = None
+        opponent_score = []
+
+        # Read data from the file.
+        while line is None or line != '':
+            if line != '':
+                # Get a line from the file, right strip it immediately.
+                line = infile.readline().rstrip()
+                # Get the score part only.
+                space_index = line.find(' ')
+                opponent_score.append(line[space_index+1:])
+
+        # Compare player's score with others.
+        for i in opponent_score:
+            if score > opponent_score:
+
 
 
 
