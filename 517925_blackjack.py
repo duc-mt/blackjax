@@ -201,25 +201,48 @@ def add_score(name, score, filename):
     None
     """
     with open('highscores.txt') as infile:
-        # Variable initialisation.
         line = None
-        opponent_score = []
+        high_score = score
+        current_result = ''
 
-        # Read data from the file.
         while line is None or line != '':
+
+            # Get a line from the file, right strip it immediately.
+            line = infile.readline().rstrip()
+            # Store the current result in highscores.txt
+            current_result += line + '\n'
+
             if line != '':
-                # Get a line from the file, right strip it immediately.
-                line = infile.readline().rstrip()
-                # Get the score part only.
+                # ----- Reading from highscores.txt ----- #
                 space_index = line.find(' ')
-                opponent_score.append(line[space_index+1:])
+                # Compare player's score with others.
+                if space_index != -1:
+                    opponent_score = round(float(line[space_index+1:]), 3)
+                    if opponent_score > high_score:
+                        high_score = opponent_score
 
-        # Compare player's score with others.
-        for i in opponent_score:
-            if score > opponent_score:
+        # Update the highscores.txt file.
+        if high_score != opponent_score:
+            # This process adds the new high score to the first line.
+            with open('highscores.txt', 'w') as outfile:
+                print(f'New High Score!' + '\n',
+                      f'NAME\t\tSCORE',
+                      f'{name}\t\t{score}',
+                      sep='\n')
 
+                outfile.write(f'{name} {score}' + '\n')
+                for line in current_result[:-1]:
+                    for character in line:
+                        outfile.write(character)
+                        if character == ' ':
+                            print('\t\t', end='')
+                        else:
+                            print(character, end='')
 
-
+        else:
+            # This process appends the score to the file.
+            with open('highscores.txt', 'a') as outfile:
+                outfile.write(f'{name}\t\t{score}' + '\n')
 
 
 def play_game():
@@ -326,9 +349,9 @@ def play_game():
 
         # Summary.
         print(f'You played {games} games.',
-              f' -> Won:\t{won}',
-              f' -> Lost:\t{lost}',
-              f' -> Tied:\t{tied}',
+              f' -> Won:   {won}',
+              f' -> Lost:  {lost}',
+              f' -> Tied:  {tied}',
               sep='\n',
               end='\n\n')
 
