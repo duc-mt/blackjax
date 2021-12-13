@@ -193,7 +193,7 @@ def add_score(name, score, filename):
     score : int
         The player's score, calculated by [won/(games-tied)*100].
     filename : str
-        The name of the fil containing two players' names and their scores.
+        The name of the file containing two players' names and their scores.
 
     Returns
     -------
@@ -291,7 +291,7 @@ def play_game():
         if play not in valid_answers:
             print("ERROR: Only enter 'y' or 'n'")
 
-    # Start the game if the user responds 'y'.
+    # Start the game once the user responds 'y'.
     if play == valid_answers[0]:
         name = input_name()
 
@@ -314,10 +314,6 @@ def play_game():
             count_21 = [dealer_point, player_point].count(21)
 
             if count_21 == 0:
-                # Should return nothing.
-                # player_play(name, player_hand)
-                # dealer_play(dealer_hand)
-
                 # Determine the winner.
                 player_point = player_play(name, player_hand)
                 dealer_point = dealer_play(dealer_hand)
