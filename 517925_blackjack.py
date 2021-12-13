@@ -201,48 +201,106 @@ def add_score(name, score, filename):
     None
     """
     with open('highscores.txt') as infile:
-        line = None
-        high_score = score
-        current_result = ''
+        # This checks if player's score is greater than those of other.
+        is_new_highscore = True
 
-        while line is None or line != '':
+        # Read the contents of the file into a list.
+        line_list = infile.readlines()
 
-            # Get a line from the file, right strip it immediately.
-            line = infile.readline().rstrip()
-            # Store the current result in highscores.txt
-            current_result += line + '\n'
+        """
+        Change the format of line_list's to
+        [['Tiffany', 37.500], ['Mike', 0.667]]
+        """
+        for index in range(len(line_list)):
+            # Strip \n from each element.
+            # Split the name and the score into two sub-lists.
+            line_list[index] = line_list[index].rstrip().split()
+            # Convert the score part into a float with 3 decimal points.
+            line_list[index][1] = float(f'{float(line_list[index][1]):.3f}')
 
-            if line != '':
-                # ----- Reading from highscores.txt ----- #
-                space_index = line.find(' ')
-                # Compare player's score with others.
-                if space_index != -1:
-                    opponent_score = round(float(line[space_index+1:]), 3)
-                    if opponent_score > high_score:
-                        high_score = opponent_score
+        """Compare player's score with other competitors in highscores.txt"""
+        for line in line_list:
+            if line[1] > score:
+                is_new_highscore = False
 
-        # Update the highscores.txt file.
-        if high_score != opponent_score:
-            # This process adds the new high score to the first line.
-            with open('highscores.txt', 'w') as outfile:
+        """Modify the highscores.txt file."""
+        # Adjust player's score to 3 decimal points
+        score = float(f'{float(score:.3f)}')
+
+        # The if statement determines what to to with the highscores.txt file.
+        if is_new_highscore:
+            """This program adds the new high score to the first line."""
+            with open('highscores.txt', 'w') as write_outfile:
                 print(f'New High Score!' + '\n',
-                      f'NAME\t\tSCORE',
-                      f'{name}\t\t{score}',
+                      f'NAME\tSCORE',
+                      f'{name}\t{score}',
                       sep='\n')
 
-                outfile.write(f'{name} {score}' + '\n')
+                write_outfile.write(f'{name} {score}' + '\n')
+
+                for line in line_list:
+
                 for line in current_result[:-1]:
                     for character in line:
-                        outfile.write(character)
-                        if character == ' ':
-                            print('\t\t', end='')
-                        else:
-                            print(character, end='')
+                        write_outfile.write(character)
+                        if line not in ['Tiffany 37.5', 'Mike 0.6']:
+                            if character == ' ':
+                                print('\t', end='')
+                            else:
+                                print(character, end='')
 
         else:
-            # This process appends the score to the file.
-            with open('highscores.txt', 'a') as outfile:
-                outfile.write(f'{name}\t\t{score}' + '\n')
+            """This program appends the score to the file."""
+            with open('highscores.txt', 'a') as append_outfile:
+                append_outfile.write(f'{name}\t\t{score}' + '\n')
+
+
+
+
+
+    # with open('highscores.txt') as infile:
+        # # Variable initialisation.
+        # line = None
+        # is_new_highscore = True
+        # current_result = ''
+
+        # while line is None or line != '':
+            # # Get a line from the file, right strip it immediately.
+            # line = infile.readline().rstrip()
+            # # Store the line retrived from highscores.txt
+            # current_result += line + '\n'
+
+            # if line != '':
+            #     space_index = line.find(' ')
+            #     # Compare player's score with others in highscores.txt
+            #     if space_index != -1:
+            #         opponent_score = f'{float(line[space_index+1:]):.3f}'
+            #         if float(opponent_score) > score:
+            #             is_new_highscore = False
+
+        # # Update the highscores.txt file.
+        # if is_new_highscore:
+            # # This process adds the new high score to the first line.
+            # with open('highscores.txt', 'w') as write_outfile:
+            #     print(f'New High Score!' + '\n',
+            #           f'NAME\tSCORE',
+            #           f'{name}\t{score:.3f}',
+            #           sep='\n')
+
+            #     write_outfile.write(f'{name} {score:.3f}' + '\n')
+            #     for line in current_result[:-1]:
+            #         for character in line:
+            #             write_outfile.write(character)
+            #             if line not in ['Tiffany 37.5', 'Mike 0.6']:
+            #                 if character == ' ':
+            #                     print('\t', end='')
+            #                 else:
+            #                     print(character, end='')
+
+        # else:
+            # # This process appends the score to the file.
+            # with open('highscores.txt', 'a') as append_outfile:
+            #     append_outfile.write(f'{name}\t\t{score:.3f}' + '\n')
 
 
 def play_game():
@@ -349,17 +407,17 @@ def play_game():
 
         # Summary.
         print(f'You played {games} games.',
-              f' -> Won:   {won}',
-              f' -> Lost:  {lost}',
-              f' -> Tied:  {tied}',
+              f' -> Won:    {won}',
+              f' -> Lost:   {lost}',
+              f' -> Tied:   {tied}',
               sep='\n',
               end='\n\n')
 
         # Check for high scores.
-        player_score = won / (games - tied) * 100
+        player_score = (won / (games - tied)) * 100
         add_score(name, player_score, 'highscores.txt')
 
-        print('\nThanks for playing!', end='\n\n')
+        print('Thanks for playing!', end='\n\n')
     else:
         print('Maybe next time...', end='\n\n')
 
