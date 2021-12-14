@@ -129,8 +129,9 @@ def input_hit_choice():
 
 
 def player_play(name, hand):
-    """Continue to draw cards until the user responds 's' (stand) or
-       their cards' total exceeds 21.
+    """
+      Continue to draw cards until the user responds
+      's' (stand) or their cards' total exceeds 21.
 
     Parameters
     ----------
@@ -184,7 +185,7 @@ def dealer_play(hand):
 
 
 def add_score(name, score, filename):
-    """Read the file to check if (score) is greater than the others in the file
+    """Read the file to check if (score) is greater than the others in the file.
 
     Parameters
     ----------
@@ -193,7 +194,7 @@ def add_score(name, score, filename):
     score : int
         The player's score, calculated by [won/(games-tied)*100].
     filename : str
-        The name of the file containing two players' names and their scores.
+        The name of the text file containing two players' names and their scores.
 
     Returns
     -------
