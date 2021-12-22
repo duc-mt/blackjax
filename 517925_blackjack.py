@@ -381,8 +381,8 @@ def play_game():
             player_score = (won / (games - tied)) * 100
             if player_score:
                 add_score(name, player_score, 'highscores.txt')
-        except ZeroDivisionError as err:
-            print(f'ERROR: {err} because the number of games ({games}) ',
+        except ZeroDivisionError as bug:
+            print(f'ERROR: {bug} because the number of games ({games}) ',
                   f'is equal to to the number of tied ({tied}).')
 
         print('\nThanks for playing!', end='\n\n')
