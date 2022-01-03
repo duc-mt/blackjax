@@ -3,7 +3,7 @@
 # | File:         517925_blackjack.py
 # | Author:       Tan Duc Mai
 # | Student ID:   517925
-# | Description:  Assignment 2 - Implement a card game called Blackjack (21)
+# | Description:  Assignment 2 - Implement a card game called Blackjack (21).
 # | This is my own work as defined by Eynesbury
 # | Academic Misconduct policy.
 # |
@@ -12,6 +12,10 @@
 
 # ------------------------------- Module Import -------------------------------
 import card_deck
+
+
+# ------------------------------ Global Constant ------------------------------
+TEXT_FILE = 'highscores.txt'
 
 
 # ---------------------------- Function Definitions ---------------------------
@@ -34,15 +38,15 @@ def input_name():
     str
         The valid user's input name.
     """
-    username = None
+    name = None
 
-    while username is None or ' ' in username or len(username) >= 12:
-        username = input('Enter your name: ')
-        if ' ' in username or len(username) >= 12:
+    while name is None or ' ' in name or len(name) >= 12:
+        name = input('Enter your name: ')
+        if ' ' in name or len(name) >= 12:
             print('ERROR: Must be 1 word and less than 12 characters.')
         print()
 
-    return username
+    return name
 
 
 def display_hand(player_name, hand):
@@ -145,6 +149,7 @@ def player_play(name, hand):
     None
     """
     user_hit = None
+    count = 0
 
     while user_hit is None or (user_hit == 'h' and get_hand_total(hand) < 21):
         user_hit = input_hit_choice()
@@ -152,10 +157,11 @@ def player_play(name, hand):
         if user_hit == 'h':
             # Draw another card.
             hand.append(card_deck.draw_card())
+            count += 1
             # Output the total value.
             display_hand(name, hand)
 
-    return get_hand_total(hand)
+    return get_hand_total(hand), count
 
 
 def dealer_play(hand):
@@ -171,17 +177,19 @@ def dealer_play(hand):
     None
     """
     dealer_hit = None
+    count = 0
 
     while dealer_hit is None or (dealer_hit == '' and get_hand_total(hand) < 17):
         # Draw another card.
         hand.append(card_deck.draw_card())
+        count += 1
         # Output the total value.
         display_hand('Dealer', hand)
 
         dealer_hit = input('Press "Enter" to continue...')
         print()
 
-    return get_hand_total(hand)
+    return get_hand_total(hand), count
 
 
 def add_score(name, score, filename):
@@ -201,19 +209,19 @@ def add_score(name, score, filename):
     None
     """
     """This program removes any blank line present in the file (if any)."""
-    with open('highscores.txt') as check_blank_infile:
+    with open(TEXT_FILE) as check_blank_infile:
         # ----- Reading ----- #
         line_list = check_blank_infile.readlines()
 
         # ----- Writing ----- #
         if '' in line_list or '\n' in line_list:
-            with open('highscores.txt', 'w') as removed_blank_outfile:
+            with open(TEXT_FILE, 'w') as removed_blank_outfile:
                 for line in line_list:
                     if line and line != '\n':
                         removed_blank_outfile.write(line)
 
     """This program adds/appends the new score to highscores.txt file."""
-    with open('highscores.txt') as infile:
+    with open(TEXT_FILE) as infile:
         # This checks if player's score is greater than those of other.
         is_new_highscore = True
 
@@ -238,12 +246,12 @@ def add_score(name, score, filename):
 
         if is_new_highscore:
             """This program adds the new high score to the first line."""
-            with open('highscores.txt', 'w') as write_outfile:
+            with open(TEXT_FILE, 'w') as write_outfile:
                 # This serves as a flag indicating whether to continue printing.
                 # Become False when hitting the line of Mike.
                 continue_print = True
 
-                # Adjust the high score to 3 decimal points and write it to file.
+                # Write the high score to file.
                 write_outfile.write(f'{name} {score}\n')
 
                 # Display the first three lines, the third one is the high score.
@@ -253,20 +261,21 @@ def add_score(name, score, filename):
                       sep='\n')
 
                 # As for the rest scores.
-                for current_index, current_line in enumerate(line_list):
+                for line in line_list:
                     # Adjust them to 3 decimal points and write them to file.
-                    score = f'{current_line[1]:.3f}'
-                    write_outfile.write(f'{current_line[0]} {score}\n')
+                    score = f'{line[1]:.3f}'
+                    write_outfile.write(f'{line[0]} {score}\n')
                     # Do not display names that are below Mike.
                     # Indicated by continue_print = False.
                     if continue_print:
-                        print(f'{current_line[0]}\t{score}')
-                    if current_line == ['Mike', 0.667]:
+                        print(f'{line[0]}\t{score}')
+                    if line == ['Mike', 0.667]:
                         continue_print = False
+                print()
 
         else:
             """This program appends the score (not a high score) to the file."""
-            with open('highscores.txt', 'a') as append_outfile:
+            with open(TEXT_FILE, 'a') as append_outfile:
                 append_outfile.write(f'{name} {score}\n')
 
 
@@ -309,48 +318,59 @@ def play_game():
             display_hand('Dealer', dealer_hand)
             display_hand(name, player_hand)
 
-            # Check for Blackjack.
-            dealer_point = get_hand_total(dealer_hand)
-            player_point = get_hand_total(player_hand)
-            count_21 = [dealer_point, player_point].count(21)
+            # Start drawing cards and make comparison.
+            player_point, player_turns = player_play(name, player_hand)
+            dealer_point, dealer_turns = dealer_play(dealer_hand)
 
-            if count_21 == 0:
-                # Determine the winner.
-                player_point = player_play(name, player_hand)
-                dealer_point = dealer_play(dealer_hand)
+            if player_point == dealer_point:
+                tied += 1
+                if player_point == 21 and player_turns == 0:
+                    print('Two player blackjack!', end='')
+                elif player_point <= 21 and dealer_turns == 1:
+                    print(f'Dealer: {dealer_point}\t{name}: {player_point}', end='')
+                elif player_point > 21:
+                    print('Two player bust!', end='')
+                print('  ->  Push')
 
-                if dealer_point == player_point:
-                    print(f'Dealer: {dealer_point}\t{name}: {player_point}',
-                          f'Push!',
-                          sep='  ->  ')
-                    tied += 1
-                elif (dealer_point > player_point and dealer_point <= 21) or player_point > 21:
-                    if player_point > 21:
-                        print(f'{name} bust!')
-                    print(f'Dealer: {dealer_point}\t{name}: {player_point}',
-                          f'Dealer wins!',
-                          sep='  ->  ')
-                    lost += 1
-                elif (player_point > dealer_point and player_point <= 21) or dealer_point > 21:
-                    if dealer_point > 21:
-                        print(f'Dealer bust!')
+            elif player_point > dealer_point:
+                if player_point == 21:
+                    won += 1
+                    print('Blackjack!', name, 'wins!')
+                elif player_point <= 21:
+                    won += 1
                     print(f'Dealer: {dealer_point}\t{name}: {player_point}',
                           f'{name} wins!',
                           sep='  ->  ')
-                    won += 1
-
-            elif count_21 == 2:
-                print('Two player blackjack!-> Push!')
-                tied += 1
+                else:
+                    if dealer_point > 21:
+                        tied += 1
+                        print('Two player bust! -> Push!')
+                    else:
+                        lost += 1
+                        print('Dealer bust!')
+                    print(f'Dealer: {dealer_point}\t{name}: {player_point}',
+                          f'Dealer wins!',
+                          sep='  ->  ')
 
             else:
-                print('Blackjack', end='! ')
                 if dealer_point == 21:
-                    print('Dealer wins!')
                     lost += 1
+                    print('Blackjack! Dealer wins!')
+                elif dealer_point <= 21:
+                    lost += 1
+                    print(f'Dealer: {dealer_point}\t{name}: {player_point}',
+                          f'Dealer wins!',
+                          sep='  ->  ')
                 else:
-                    print(f'{name} wins!')
-                    won += 1
+                    if player_point > 21:
+                        tied += 1
+                        print('Two player bust! -> Push!')
+                    else:
+                        won += 1
+                        print(f'{name} bust!')
+                    print(f'Dealer: {dealer_point}\t{name}: {player_point}',
+                          f'{name} wins!',
+                          sep='  ->  ')
 
             # A line separating each game.
             print(f"\n{'-' * 40}\n")
@@ -376,16 +396,14 @@ def play_game():
               sep='\n',
               end='\n\n')
 
-        # Check for high scores.
+        # Check for high scores, handle ZeroDivisionError if it occurs.
         try:
-            player_score = (won / (games - tied)) * 100
-            if player_score:
-                add_score(name, player_score, 'highscores.txt')
-        except ZeroDivisionError as bug:
-            print(f'ERROR: {bug} because the number of games ({games}) ',
+            add_score(name, ((won/(games-tied))*100), TEXT_FILE)
+        except ZeroDivisionError as e:
+            print(f'ERROR: "{e}" as the number of games ({games}) ',
                   f'is equal to to the number of tied ({tied}).')
 
-        print('\nThanks for playing!', end='\n\n')
+        print('Thanks for playing!', end='\n\n')
 
     else:
         print('Maybe next time...', end='\n\n')
