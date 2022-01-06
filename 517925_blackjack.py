@@ -347,10 +347,10 @@ def play_game():
                         print('Two player bust! -> Push!')
                     else:
                         lost += 1
-                        print('Dealer bust!')
-                    print(f'Dealer: {dealer_point}\t{name}: {player_point}',
-                          f'Dealer wins!',
-                          sep='  ->  ')
+                        print(f'{name} bust!')
+                        print(f'Dealer: {dealer_point}\t{name}: {player_point}',
+                              f'Dealer wins!',
+                              sep='  ->  ')
 
             else:
                 if dealer_point == 21:
@@ -367,12 +367,12 @@ def play_game():
                         print('Two player bust! -> Push!')
                     else:
                         won += 1
-                        print(f'{name} bust!')
-                    print(f'Dealer: {dealer_point}\t{name}: {player_point}',
-                          f'{name} wins!',
-                          sep='  ->  ')
+                        print('Dealer bust!')
+                        print(f'Dealer: {dealer_point}\t{name}: {player_point}',
+                              f'{name} wins!',
+                              sep='  ->  ')
 
-            # A line separating each game.
+            # Display a line separating each game.
             print(f"\n{'-' * 40}\n")
 
             # Reset the card once a game is complete.
