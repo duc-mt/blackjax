@@ -228,7 +228,9 @@ def add_score(name, score, filename):
         # Read the contents of the file into a list.
         line_list = infile.readlines()
 
-        """Change {line_list}'s format to [['Tiffany', 37.500], ['Mike', 0.667]]."""
+        """
+        Change {line_list}'s format to [['Tiffany', 37.500], ['Mike', 0.667]].
+        """
         for index in range(len(line_list)):
             # Strip \n from each element.
             # Split the name and the score into two sub-lists.
@@ -236,7 +238,9 @@ def add_score(name, score, filename):
             # Convert the score part into a float.
             line_list[index][1] = float(line_list[index][1])
 
-        """Compare player's score with those of the others in highscores.txt file."""
+        """
+        Compare player's score with those of the others in highscores.txt file.
+        """
         for line in line_list:
             if line[1] > score:
                 is_new_highscore = False
@@ -254,7 +258,7 @@ def add_score(name, score, filename):
                 # Write the high score to file.
                 write_outfile.write(f'{name} {score}\n')
 
-                # Display the first three lines, the third one is the high score.
+                # Display the first three lines, the 3rd one is the high score.
                 print(f'New High Score!' + '\n',
                       f'NAME\tSCORE',
                       f'{name}\t{score}',
@@ -274,7 +278,9 @@ def add_score(name, score, filename):
                 print()
 
         else:
-            """This program appends the score (not a high score) to the file."""
+            """
+            This program appends the score (not a high score) to the file.
+            """
             with open(TEXT_FILE, 'a') as append_outfile:
                 append_outfile.write(f'{name} {score}\n')
 
@@ -327,7 +333,8 @@ def play_game():
                 if player_point == 21 and player_turns == 0:
                     print('Two player blackjack!', end='')
                 elif player_point <= 21 and dealer_turns == 1:
-                    print(f'Dealer: {dealer_point}\t{name}: {player_point}', end='')
+                    print(f'Dealer: {dealer_point}\t{name}: {player_point}',
+                          end='')
                 elif player_point > 21:
                     print('Two player bust!', end='')
                 print('  ->  Push')
