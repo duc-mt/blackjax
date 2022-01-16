@@ -12,7 +12,7 @@ import random
 deck = []
 
 
-def draw_card():    
+def draw_card():
     '''
     Removes and returns the last item from the global deck.
     The deck will be reset after the last card is drawn.
