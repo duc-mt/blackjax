@@ -89,7 +89,7 @@ Do you want to play blackjack (y/n): y
 Enter your name: Royal
 
 Dealer's hand: 3 of Diamonds
- Hand Total: (3)
+Hand Total: (3)
 
 Royal's hand: 6 of Clubs, 6 of Spades
 Hand Total: (12)
