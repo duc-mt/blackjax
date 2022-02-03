@@ -1,16 +1,20 @@
+#!/usr/bin/python3
+
 # ----------------------------------------------------------------------------
 # |
-# | File:         517925_blackjack.py
+# | File:         main.py
 # | Author:       Tan Duc Mai
-# | Student ID:   517925
-# | Description:  Assignment 2 - Implement a card game called Blackjack (21).
-# | This is my own work as defined by Eynesbury
-# | Academic Misconduct policy.
+# | Email:        tan.duc.work@gmail.com
+# | Date:         06-Oct-2021
+# | Description:  Implement a card game called Blackjack (21).
+# |   I hereby declare that I completed this work without any improper help
+# |   from a third party and without using any aids other than those cited.
 # |
 # ----------------------------------------------------------------------------
 
 
 # ------------------------------- Module Import -------------------------------
+"""The module draws from 52 cards each time a player/computer takes turn."""
 import card_deck
 
 
