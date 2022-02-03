@@ -23,13 +23,11 @@ TEXT_FILE = 'highscores.txt'
 
 
 # ---------------------------- Function Definitions ---------------------------
-def display_details(filename, author, student_id):
+def display_details(filename, author, email):
     """Display the author's details."""
     print(f'File   : {filename}',
           f'Author : {author}',
-          f'ID     : {student_id}',
-          f'This is my own work as defined by the',
-          f'Eynesbury Academic Integrity Policy.',
+          f'Email  : {email}',
           sep='\n',
           end='\n\n')
 
@@ -293,7 +291,7 @@ def play_game():
     print("--------- Welcome to Blackjack ---------\n")
 
     # Display the author's details.
-    display_details('517925_blackjack.py', 'Tan Duc Mai', '517925')
+    display_details('main.py', 'Tan Duc Mai', 'tan.duc.work@gmail.com')
 
     # Variable initialisation.
     valid_answers = ['y', 'n']
