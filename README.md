@@ -166,9 +166,9 @@ Dealer: 19 Royal: 19 -> Push!
 Do you want to play again (y/n): n
 
 You played 3 games.
- -> Won: 1
- -> Lost: 1
- -> Tied: 1
+ -> Won  : 1
+ -> Lost : 1
+ -> Tied : 1
 
 New High Score!
 
