@@ -1,6 +1,8 @@
 # Aim
 Implement a text-based card game called **Blackjack**, also known as **21**.
 
+![Example](blackjack.png)
+
 # Total Calculation
 A player's total hand value is calculated by adding the values of each their
 cards. Face cards, such as Jacks, Queens and Kings are all worth 10. The Ace is
