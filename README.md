@@ -7,7 +7,7 @@
 1. [Implementation](#implementation)
 1. [Algorithm](#algorithm)
 1. [Rules](#rules)
-1. [Sample Output](#https://raw.githubusercontent.com/tanducmai/blackjack/master/sample_output.pdf)
+1. [Sample Output](https://raw.githubusercontent.com/tanducmai/blackjack/master/sample_output.pdf)
 1. [Tree Structure](#tree-structure)
 
 <!-- vim-markdown-toc -->
