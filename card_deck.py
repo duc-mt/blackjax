@@ -1,17 +1,30 @@
-#
-# card_deck module - PSP Assignment 2, 2021.
-# DO NOT MODIFY!
-#
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
+# =============================================================================
+#
+#        FILE:  card_deck.jy
+#      AUTHOR:  Tan Duc Mai <henryfromvietnam@gmail.com>
+#     CREATED:  2021-12-10
+# DESCRIPTION:  A module to draw and fill card.
+#   I hereby declare that I completed this work without any improper help
+#   from a third party and without using any aids other than those cited.
+#
+# =============================================================================
+
+
+# ------------------------------- Module Import -------------------------------
 import random
 
 
+# ------------------------------ Global Constant ------------------------------
 # Contains cards in the format [value, suit]
 # DO NOT ACCESS THIS VARIABLE!
 # Call draw_card() instead.
 deck = []
 
 
+# ---------------------------- Function Definitions ---------------------------
 def draw_card():
     '''
     Removes and returns the last item from the global deck.
@@ -35,5 +48,3 @@ def fill(deck):
         for suit in ['Hearts', 'Spades', 'Diamonds', 'Clubs']:
             deck.append([val, suit])
     random.shuffle(deck)
-
-

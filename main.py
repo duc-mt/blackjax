@@ -1,16 +1,16 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
-# ----------------------------------------------------------------------------
-# |
-# | File:         main.py
-# | Author:       Tan Duc Mai
-# | Email:        tan.duc.work@gmail.com
-# | Date:         10-Dec-2021
-# | Description:  Implement a card game called Blackjack (21).
-# |   I hereby declare that I completed this work without any improper help
-# |   from a third party and without using any aids other than those cited.
-# |
-# ----------------------------------------------------------------------------
+# =============================================================================
+#
+#        FILE:  main.py
+#      AUTHOR:  Tan Duc Mai <henryfromvietnam@gmail.com>
+#     CREATED:  2021-12-10
+# DESCRIPTION:  Implement a card game called Blackjack (21).
+#   I hereby declare that I completed this work without any improper help
+#   from a third party and without using any aids other than those cited.
+#
+# =============================================================================
 
 
 # ------------------------------- Module Import -------------------------------
