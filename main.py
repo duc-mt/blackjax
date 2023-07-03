@@ -261,8 +261,8 @@ def add_score(name, score, filename):
                 write_outfile.write(f'{name} {score}\n')
 
                 # Display the first three lines, the 3rd one is the high score.
-                print(f'New High Score!' + '\n',
-                      f'NAME\tSCORE',
+                print('New High Score!' + '\n',
+                      'NAME\tSCORE',
                       f'{name}\t{score}',
                       sep='\n')
 
@@ -358,7 +358,7 @@ def play_game():
                         lost += 1
                         print(f'{name} bust!')
                         print(f'Dealer: {dealer_point}\t{name}: {player_point}',
-                              f'Dealer wins!',
+                              'Dealer wins!',
                               sep='  ->  ')
 
             else:
@@ -368,7 +368,7 @@ def play_game():
                 elif dealer_point <= 21:
                     lost += 1
                     print(f'Dealer: {dealer_point}\t{name}: {player_point}',
-                          f'Dealer wins!',
+                          'Dealer wins!',
                           sep='  ->  ')
                 else:
                     if player_point > 21:
