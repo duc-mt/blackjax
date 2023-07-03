@@ -1,9 +1,25 @@
+# Table of Contents
+
+<!-- vim-markdown-toc GFM -->
+
+1. [Aim](#aim)
+1. [Total Calculation](#total-calculation)
+1. [Implementation](#implementation)
+1. [Algorithm](#algorithm)
+1. [Rules](#rules)
+1. [Sample Output](#https://raw.githubusercontent.com/tanducmai/blackjack/master/sample_output.pdf)
+1. [Tree Structure](#tree-structure)
+
+<!-- vim-markdown-toc -->
+
 # Aim
+
 Implement a text-based card game called **Blackjack**, also known as **21**.
 
 ![Example](blackjack.png)
 
 # Total Calculation
+
 A player's total hand value is calculated by adding the values of each their
 cards. Face cards, such as Jacks, Queens and Kings are all worth 10. The Ace is
 an unusual card because, if the combined value with other cards in hand does not
@@ -11,6 +27,7 @@ exceed 21, it will be worth 11, otherwise the Ace will be worth 1.  Other number
 cards are worth the number value shown on the card.
 
 # Implementation
+
 In a standard game of 2-player Blackjack the player and the dealer are dealt 2
 cards. The player shows both cards face-up. The dealer shows one of their cards
 face-up and one face-down. The player decides to draw cards by saying, "hit", or
@@ -40,7 +57,6 @@ than all other scores in the file, the game will display, "New High Score!", and
 display a table containing all players and their recorded scores.
 
 # Algorithm
-My implementation's gameplay is as follows:
 
 1. The player and the dealer are dealt an initial hand of two cards each. The
    player shows both cards. The dealer shows only one card.
@@ -69,6 +85,7 @@ My implementation's gameplay is as follows:
    they have a point value of 17 or greater.
 
 # Rules
+
 - If the player busts, they lose immediately.
 - If the player and the dealer have the same point value, it is called a "push"
   and neither win the hand (draw).
@@ -80,6 +97,7 @@ My implementation's gameplay is as follows:
 - The player with the higher hand that does not exceed 21 wins the game!
 
 # Sample Output
+
 ```
 --------- Welcome to Blackjack ---------
 
@@ -182,4 +200,16 @@ Mike         0.667
 Thanks for playing!
 
 ---------- See you again soon ----------
+```
+
+# Tree Structure
+
+```
+.
+├── README.md
+├── blackjack.png
+├── card_deck.py
+├── highscores.txt
+├── main.py
+└── sample_output.pdf
 ```
