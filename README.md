@@ -70,15 +70,15 @@ display a table containing all players and their recorded scores.
    the term Blackjack can only be achieved as a result of the first two cards
    dealt.
 6. When the player has finished playing out their hand, the dealer (in this case
-   the computer) plays out the dealer’s hand.
-7. During the player’s turn, the player is faced with two options either:
+   the computer) plays out the dealer's hand.
+7. During the player's turn, the player is faced with two options either:
 - Hit (take a card): After the initial deal of two cards, a player may choose to
   receive additional cards as many times as they wish, adding the point value of
   each card to their hand total.
-- Stand (end their turn): Do not receive any more cards. The player’s turn is
+- Stand (end their turn): Do not receive any more cards. The player's turn is
   over.
 8. The player repeatedly takes a card until, the player chooses to stand, or the
-   player busts i.e., exceeds a total of 21. The player’s turn is over after
+   player busts i.e., exceeds a total of 21. The player's turn is over after
    deciding to stand or if they bust.
 9. Once the player has finished, if the player has not bust, the dealer reveals
    their hidden second card and plays out their hand. The dealer must hit until
