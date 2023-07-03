@@ -181,7 +181,10 @@ def dealer_play(hand):
     dealer_hit = None
     count = 0
 
-    while dealer_hit is None or (dealer_hit == '' and get_hand_total(hand) < 17):
+    while (
+            (dealer_hit is None)
+            or (dealer_hit == '' and get_hand_total(hand) < 17)
+    ):
         # Draw another card.
         hand.append(card_deck.draw_card())
         count += 1
@@ -195,7 +198,7 @@ def dealer_play(hand):
 
 
 def add_score(name, score, filename):
-    """Read the file to check if (score) is greater than the others in the file.
+    """Read the file to check if score is greater than the others in the file.
 
     Parameters
     ----------
@@ -204,12 +207,13 @@ def add_score(name, score, filename):
     score : int
         The player's score, calculated by [won/(games-tied)*100].
     filename : str
-        The name of the text file containing two players' names and their scores.
+        The name of the text file containing two players' names and scores.
 
     Returns
     -------
     None
     """
+
     """This program removes any blank line present in the file (if any)."""
     with open(TEXT_FILE) as check_blank_infile:
         # ----- Reading ----- #
@@ -253,7 +257,7 @@ def add_score(name, score, filename):
         if is_new_highscore:
             """This program adds the new high score to the first line."""
             with open(TEXT_FILE, 'w') as write_outfile:
-                # This serves as a flag indicating whether to continue printing.
+                # This serves as a flag indicating if continue printing.
                 # Become False when hitting the line of Mike.
                 continue_print = True
 
@@ -291,7 +295,7 @@ def play_game():
     print("--------- Welcome to Blackjack ---------\n")
 
     # Display the author's details.
-    display_details('main.py', 'Tan Duc Mai', 'tan.duc.work@gmail.com')
+    display_details('main.py', 'Tan Duc Mai', 'henryfromvietnam@gmail.com')
 
     # Variable initialisation.
     valid_answers = ['y', 'n']
@@ -357,7 +361,8 @@ def play_game():
                     else:
                         lost += 1
                         print(f'{name} bust!')
-                        print(f'Dealer: {dealer_point}\t{name}: {player_point}',
+                        print(f'Dealer: {dealer_point}\t{name}'
+                              f': {player_point}',
                               'Dealer wins!',
                               sep='  ->  ')
 
@@ -377,7 +382,8 @@ def play_game():
                     else:
                         won += 1
                         print('Dealer bust!')
-                        print(f'Dealer: {dealer_point}\t{name}: {player_point}',
+                        print(f'Dealer: {dealer_point}\t{name}'
+                              f': {player_point}',
                               f'{name} wins!',
                               sep='  ->  ')
 
