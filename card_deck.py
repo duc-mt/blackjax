@@ -3,7 +3,7 @@
 
 # =============================================================================
 #
-#        FILE:  card_deck.jy
+#        FILE:  card_deck.py
 #      AUTHOR:  Tan Duc Mai <henryfromvietnam@gmail.com>
 #     CREATED:  2021-12-10
 # DESCRIPTION:  A module to draw and fill card.
