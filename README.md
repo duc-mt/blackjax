@@ -1,16 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 # Table of Contents
 
-<!-- vim-markdown-toc GFM -->
+- [Aim](#aim)
+- [Total Calculation](#total-calculation)
+- [Implementation](#implementation)
+- [Algorithm](#algorithm)
+- [Rules](#rules)
+- [Sample Output](#sample-output)
+- [Tree Structure](#tree-structure)
 
-1. [Aim](#aim)
-1. [Total Calculation](#total-calculation)
-1. [Implementation](#implementation)
-1. [Algorithm](#algorithm)
-1. [Rules](#rules)
-1. [Sample Output](https://raw.githubusercontent.com/tanducmai/blackjack/master/sample_output.pdf)
-1. [Tree Structure](#tree-structure)
-
-<!-- vim-markdown-toc -->
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Aim
 
