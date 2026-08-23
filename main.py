@@ -42,9 +42,15 @@ def input_name():
     """
     name = None
 
-    while name is None or ' ' in name or len(name) >= 12:
+    # NOTE: this used to loop `while name is None or ' ' in name or
+    # len(name) >= 12`. An empty string has no space in it and its
+    # length (0) is under 12, so it satisfied every check and was
+    # accepted as a valid name - even though the rule is "must be 1
+    # word", and an empty name isn't a word at all. It would then show
+    # up blank everywhere the name is displayed (e.g. "'s hand: ...").
+    while name is None or name == '' or ' ' in name or len(name) >= 12:
         name = input('Enter your name: ')
-        if ' ' in name or len(name) >= 12:
+        if name == '' or ' ' in name or len(name) >= 12:
             print('ERROR: Must be 1 word and less than 12 characters.')
         print()
 
@@ -67,16 +73,33 @@ def display_hand(player_name, hand):
     """
     # Output the hand.
     print(f'{player_name}\'s hand', end=': ')
-    i = 0
-    for card in hand:
-        i += 1
-        if i < len(hand):
-            print(f'{card[0]} of {card[1]}', end=', ')
-        else:
-            print(f'{card[0]} of {card[1]}')
+    card_strings = [f'{card[0]} of {card[1]}' for card in hand]
+    print(', '.join(card_strings))
 
     # Output the total value.
     print(f'Hand Total: ({get_hand_total(hand)})', end='\n\n')
+
+
+def display_dealer_upcard(hand):
+    """Display only the dealer's face-up card, keeping the rest hidden.
+
+    Standard Blackjack rules only show one of the dealer's initial two
+    cards to the player - the second stays face-down until the dealer's
+    hand is revealed (either because someone has Blackjack, or because
+    the player finished their turn without busting). No total is shown,
+    since it isn't fully known with a card still hidden.
+
+    Parameters
+    ----------
+    hand : list
+        The dealer's hand. Only the first card is shown.
+
+    Returns
+    -------
+    None
+    """
+    print(f"Dealer's hand: {hand[0][0]} of {hand[0][1]}, [face-down card]",
+          end='\n\n')
 
 
 def get_hand_total(hand):
@@ -96,20 +119,30 @@ def get_hand_total(hand):
     point = 0
     count_ace = 0
 
-    # Add the value of cards.
+    # Add the value of cards, treating every Ace as 11 for now.
     for card in hand:
         if card[0] == 'Ace':
             count_ace += 1
+            point += 11
         elif card[0] in ['Jack', 'Queen', 'King']:
             point += 10
         else:
             point += int(card[0])
 
-    # Determine the value of Ace cards.
-    if (point + 11*count_ace) <= 21:
-        point += 11*count_ace
-    else:
-        point += 1*count_ace
+    # Soften Aces from 11 down to 1, one at a time, only as long as the
+    # hand is over 21 and there's still a soft Ace to convert.
+    #
+    # NOTE: this used to be all-or-nothing - either every Ace counted as
+    # 11, or every Ace counted as 1 - which is wrong for any hand with
+    # two or more Aces. For example Ace+Ace+9 should score 21 (one Ace
+    # as 11, the other as 1, i.e. 11+1+9), but the old logic could only
+    # produce 9+22=31 (over 21, so falls back to all-Aces-as-1) or
+    # 9+2=11, undercounting a hand that should have been a near-certain
+    # winner - and potentially prompting the player to keep hitting a
+    # hand that was already strong enough to stand on.
+    while point > 21 and count_ace > 0:
+        point -= 10
+        count_ace -= 1
 
     return point
 
@@ -150,10 +183,18 @@ def player_play(name, hand):
     -------
     None
     """
+    # Only called once a natural (first-two-card) Blackjack has already
+    # been ruled out upstream, in play_game() - so unlike a plain "is
+    # the total already 21" check, this loop faithfully follows the
+    # documented rule: "the player repeatedly takes a card until they
+    # choose to stand, or the player busts". It does NOT auto-stand at
+    # 21 reached via a hit; the player is still asked, and may choose to
+    # stand (the sensible choice) - the game doesn't make that choice
+    # for them.
     user_hit = None
     count = 0
 
-    while user_hit is None or (user_hit == 'h' and get_hand_total(hand) < 21):
+    while user_hit is None or (user_hit == 'h' and get_hand_total(hand) <= 21):
         user_hit = input_hit_choice()
 
         if user_hit == 'h':
@@ -178,20 +219,24 @@ def dealer_play(hand):
     -------
     None
     """
-    dealer_hit = None
     count = 0
 
-    while (
-            (dealer_hit is None)
-            or (dealer_hit == '' and get_hand_total(hand) < 17)
-    ):
+    # NOTE: this used to loop `while (dealer_hit is None) or (dealer_hit
+    # == '' and get_hand_total(hand) < 17)`, which meant the dealer's
+    # mandatory "hit until 17" rule was silently gated on the *exact
+    # string* typed at the "Press Enter" prompt. Any stray keystroke
+    # before Enter (a space, a letter, anything) made dealer_hit != '',
+    # which ended the dealer's turn immediately regardless of their
+    # total - even well under 17. The prompt is purely for pacing; only
+    # the hand total should decide whether the dealer keeps drawing.
+    while get_hand_total(hand) < 17:
         # Draw another card.
         hand.append(card_deck.draw_card())
         count += 1
         # Output the total value.
         display_hand('Dealer', hand)
 
-        dealer_hit = input('Press "Enter" to continue...')
+        input('Press "Enter" to continue...')
         print()
 
     return get_hand_total(hand), count
@@ -213,82 +258,144 @@ def add_score(name, score, filename):
     -------
     None
     """
+    # NOTE: every `open(TEXT_FILE, ...)` call below used to ignore the
+    # `filename` parameter entirely and hardcode the module-level
+    # TEXT_FILE constant instead. In normal play this had no visible
+    # effect (play_game()'s only caller always passes TEXT_FILE), but it
+    # silently broke the documented API - nothing else could ever use
+    # this function against a different file - and made it impossible
+    # to unit test without mutating the real highscores.txt. Every
+    # occurrence below now uses `filename`.
 
-    """This program removes any blank line present in the file (if any)."""
-    with open(TEXT_FILE) as check_blank_infile:
-        # ----- Reading ----- #
-        line_list = check_blank_infile.readlines()
-
-        # ----- Writing ----- #
+    # This program removes any blank line present in the file (if any).
+    # A missing file (e.g. a fresh checkout with no highscores.txt yet,
+    # or one that was deleted) used to crash with an unhandled
+    # FileNotFoundError; it's now treated the same as an empty file.
+    try:
+        with open(filename) as check_blank_infile:
+            line_list = check_blank_infile.readlines()
+    except FileNotFoundError:
+        line_list = []
+    else:
         if '' in line_list or '\n' in line_list:
-            with open(TEXT_FILE, 'w') as removed_blank_outfile:
+            with open(filename, 'w') as removed_blank_outfile:
                 for line in line_list:
                     if line and line != '\n':
                         removed_blank_outfile.write(line)
 
-    """This program adds/appends the new score to highscores.txt file."""
-    with open(TEXT_FILE) as infile:
-        # This checks if player's score is greater than those of other.
-        is_new_highscore = True
+    # This program adds/appends the new score to the score file.
+    try:
+        with open(filename) as infile:
+            line_list = infile.readlines()
+    except FileNotFoundError:
+        line_list = []
 
-        # Read the contents of the file into a list.
-        line_list = infile.readlines()
+    # This checks if player's score is greater than those of other.
+    is_new_highscore = True
 
-        """
-        Change {line_list}'s format to [['Tiffany', 37.500], ['Mike', 0.667]].
-        """
-        for index in range(len(line_list)):
-            # Strip \n from each element.
-            # Split the name and the score into two sub-lists.
-            line_list[index] = line_list[index].rstrip().split()
-            # Convert the score part into a float.
-            line_list[index][1] = float(line_list[index][1])
+    # Change {line_list}'s format to [['Tiffany', 37.500], ['Mike', 0.667]].
+    for index in range(len(line_list)):
+        # Strip \n from each element.
+        # Split the name and the score into two sub-lists.
+        line_list[index] = line_list[index].rstrip().split()
+        # Convert the score part into a float.
+        line_list[index][1] = float(line_list[index][1])
 
-        """
-        Compare player's score with those of the others in highscores.txt file.
-        """
-        for line in line_list:
-            if line[1] > score:
-                is_new_highscore = False
+    # Compare player's score with those of the others in the score file.
+    for line in line_list:
+        if line[1] > score:
+            is_new_highscore = False
 
-        # Adjust the score to 3 decimal points.
-        score = f'{score:.3f}'
+    # Adjust the score to 3 decimal points.
+    score = f'{score:.3f}'
 
-        if is_new_highscore:
-            """This program adds the new high score to the first line."""
-            with open(TEXT_FILE, 'w') as write_outfile:
-                # This serves as a flag indicating if continue printing.
-                # Become False when hitting the line of Mike.
-                continue_print = True
+    if is_new_highscore:
+        # This program adds the new high score to the first line.
+        with open(filename, 'w') as write_outfile:
+            # Write the high score to file.
+            write_outfile.write(f'{name} {score}\n')
 
-                # Write the high score to file.
-                write_outfile.write(f'{name} {score}\n')
+            # Display the first three lines: the new high score plus
+            # the next two scores that were already in the file.
+            #
+            # NOTE: this used to decide where to stop printing by
+            # comparing each line to the literal value ['Mike', 0.667] -
+            # a leftover from whatever sample highscores.txt existed
+            # during development. For any real file (no player named
+            # exactly "Mike" with a score of exactly 0.667), that
+            # comparison never matched, so continue_print never turned
+            # False and *every* existing score got printed instead of
+            # just the top three the comment describes.
+            print('New High Score!' + '\n',
+                  'NAME\tSCORE',
+                  f'{name}\t{score}',
+                  sep='\n')
 
-                # Display the first three lines, the 3rd one is the high score.
-                print('New High Score!' + '\n',
-                      'NAME\tSCORE',
-                      f'{name}\t{score}',
-                      sep='\n')
+            for position, line in enumerate(line_list):
+                # Adjust them to 3 decimal points and write them to file.
+                line_score = f'{line[1]:.3f}'
+                write_outfile.write(f'{line[0]} {line_score}\n')
+                # Only display the two scores right below the new one.
+                if position < 2:
+                    print(f'{line[0]}\t{line_score}')
+            print()
 
-                # As for the rest scores.
-                for line in line_list:
-                    # Adjust them to 3 decimal points and write them to file.
-                    score = f'{line[1]:.3f}'
-                    write_outfile.write(f'{line[0]} {score}\n')
-                    # Do not display names that are below Mike.
-                    # Indicated by continue_print = False.
-                    if continue_print:
-                        print(f'{line[0]}\t{score}')
-                    if line == ['Mike', 0.667]:
-                        continue_print = False
-                print()
+    else:
+        # This program appends the score (not a high score) to the file.
+        with open(filename, 'a') as append_outfile:
+            append_outfile.write(f'{name} {score}\n')
 
-        else:
-            """
-            This program appends the score (not a high score) to the file.
-            """
-            with open(TEXT_FILE, 'a') as append_outfile:
-                append_outfile.write(f'{name} {score}\n')
+
+def resolve_round(name, player_point, dealer_point,
+                  player_blackjack, dealer_blackjack, player_bust):
+    """Determine the outcome of a finished round and the message to show.
+
+    Implements the Rules section of the README as a single, pure
+    decision: given the final point totals and whether either side had
+    a natural (first-two-card) Blackjack or the player busted, decide
+    who won and what to print. Kept separate from play_game() so this
+    decision logic can be tested directly, without mocking input() or
+    playing through an entire game.
+
+    Parameters
+    ----------
+    name : str
+        The player's name.
+    player_point : int
+        The player's final hand total.
+    dealer_point : int
+        The dealer's final hand total.
+    player_blackjack : bool
+        True if the player's first two cards totalled 21.
+    dealer_blackjack : bool
+        True if the dealer's first two cards totalled 21.
+    player_bust : bool
+        True if the player's hand total exceeded 21 during their turn.
+
+    Returns
+    -------
+    tuple[str, str]
+        (outcome, message), where outcome is one of 'win', 'lose', or
+        'push' from the player's perspective.
+    """
+    if player_blackjack and dealer_blackjack:
+        return 'push', 'Two player blackjack!  ->  Push'
+    if dealer_blackjack:
+        return 'lose', 'Blackjack! Dealer wins!'
+    if player_blackjack:
+        return 'win', f'Blackjack! {name} wins!'
+
+    score_line = f'Dealer: {dealer_point}\t{name}: {player_point}'
+
+    if player_bust:
+        return 'lose', f'{name} bust!\n{score_line}  ->  Dealer wins!'
+    if player_point == dealer_point:
+        return 'push', f'{score_line}  ->  Push'
+    if dealer_point > 21:
+        return 'win', f'Dealer bust!\n{score_line}  ->  {name} wins!'
+    if player_point > dealer_point:
+        return 'win', f'{score_line}  ->  {name} wins!'
+    return 'lose', f'{score_line}  ->  Dealer wins!'
 
 
 def play_game():
@@ -300,8 +407,6 @@ def play_game():
     # Variable initialisation.
     valid_answers = ['y', 'n']
     games = 0
-    dealer_hand = []
-    player_hand = []
     won = 0
     lost = 0
     tied = 0
@@ -320,79 +425,54 @@ def play_game():
         while play == valid_answers[0]:
             games += 1
 
-            # Draw cards.
-            dealer_hand.append(card_deck.draw_card())
+            # Deal two cards each - matching the documented Algorithm:
+            # the player's hand is shown in full, but only the dealer's
+            # first card is shown; the second stays hidden until the
+            # dealer's hand is revealed below.
+            dealer_hand = [card_deck.draw_card(), card_deck.draw_card()]
+            player_hand = [card_deck.draw_card(), card_deck.draw_card()]
 
-            for _ in range(2):
-                player_hand.append(card_deck.draw_card())
-
-            # Display hands.
-            display_hand('Dealer', dealer_hand)
+            display_dealer_upcard(dealer_hand)
             display_hand(name, player_hand)
 
-            # Start drawing cards and make comparison.
-            player_point, player_turns = player_play(name, player_hand)
-            dealer_point, dealer_turns = dealer_play(dealer_hand)
+            player_point = get_hand_total(player_hand)
+            dealer_point = get_hand_total(dealer_hand)
+            player_blackjack = player_point == 21
+            dealer_blackjack = dealer_point == 21
+            player_bust = False
 
-            if player_point == dealer_point:
-                tied += 1
-                if player_point == 21 and player_turns == 0:
-                    print('Two player blackjack!', end='')
-                elif player_point <= 21 and dealer_turns == 1:
-                    print(f'Dealer: {dealer_point}\t{name}: {player_point}',
-                          end='')
-                elif player_point > 21:
-                    print('Two player bust!', end='')
-                print('  ->  Push')
-
-            elif player_point > dealer_point:
-                if player_point == 21:
-                    won += 1
-                    print('Blackjack!', name, 'wins!')
-                elif player_point <= 21:
-                    won += 1
-                    print(f'Dealer: {dealer_point}\t{name}: {player_point}',
-                          f'{name} wins!',
-                          sep='  ->  ')
-                else:
-                    if dealer_point > 21:
-                        tied += 1
-                        print('Two player bust! -> Push!')
-                    else:
-                        lost += 1
-                        print(f'{name} bust!')
-                        print(f'Dealer: {dealer_point}\t{name}'
-                              f': {player_point}',
-                              'Dealer wins!',
-                              sep='  ->  ')
-
+            if player_blackjack or dealer_blackjack:
+                # The round is decided immediately - reveal the
+                # dealer's hidden card so both hands are visible.
+                display_hand('Dealer', dealer_hand)
             else:
-                if dealer_point == 21:
-                    lost += 1
-                    print('Blackjack! Dealer wins!')
-                elif dealer_point <= 21:
-                    lost += 1
-                    print(f'Dealer: {dealer_point}\t{name}: {player_point}',
-                          'Dealer wins!',
-                          sep='  ->  ')
-                else:
-                    if player_point > 21:
-                        tied += 1
-                        print('Two player bust! -> Push!')
-                    else:
-                        won += 1
-                        print('Dealer bust!')
-                        print(f'Dealer: {dealer_point}\t{name}'
-                              f': {player_point}',
-                              f'{name} wins!',
-                              sep='  ->  ')
+                # Neither has Blackjack: the player plays out their
+                # hand first.
+                player_point, _ = player_play(name, player_hand)
+                player_bust = player_point > 21
+
+                # Reveal the dealer's hidden card either way, but the
+                # dealer only takes further hits if the player didn't
+                # bust - a bust already decides the round.
+                display_hand('Dealer', dealer_hand)
+                if not player_bust:
+                    dealer_point, _ = dealer_play(dealer_hand)
+
+            outcome, message = resolve_round(
+                name, player_point, dealer_point,
+                player_blackjack, dealer_blackjack, player_bust,
+            )
+            print(message)
+
+            if outcome == 'win':
+                won += 1
+            elif outcome == 'lose':
+                lost += 1
+            else:
+                tied += 1
 
             # Display a line separating each game.
             print(f"\n{'-' * 40}\n")
-
-            # Reset the card once a game is complete.
-            dealer_hand = []
-            player_hand = []
 
             # Ask to play again.
             again = None
