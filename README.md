@@ -9,6 +9,9 @@
 - [Rules](#rules)
 - [Sample Output](#sample-output)
 - [Tree Structure](#tree-structure)
+- [Testing](#testing)
+- [Development](#development)
+- [Known Limitations](#known-limitations)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -205,11 +208,126 @@ Thanks for playing!
 # Tree Structure
 
 ```
-.
+├── .github/
+│   ├── dependabot.yml
+│   └── workflows/
+│       ├── ci.yml
+│       └── codeql.yml
 ├── README.md
 ├── blackjack.png
 ├── card_deck.py
 ├── highscores.txt
 ├── main.py
-└── sample_output.pdf
+├── pyproject.toml
+├── requirements-dev.txt
+├── sample_output.pdf
+└── tests/
+    ├── conftest.py
+    ├── test_add_score.py
+    ├── test_dealer_play.py
+    ├── test_get_hand_total.py
+    ├── test_input_validation.py
+    ├── test_play_game.py
+    ├── test_player_play.py
+    └── test_resolve_round.py
 ```
+
+# Testing
+
+Install the dev dependencies and run the test suite:
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+Tests that touch the score file use a temporary path (the `scorefile`
+fixture in `tests/conftest.py`), so running the suite never modifies the
+real `highscores.txt`.
+
+# Development
+
+CI runs on every pull request and push via GitHub Actions
+(`.github/workflows/ci.yml`): linting (`ruff`), tests across Python
+3.10-3.12, and a `bandit` security scan. A weekly CodeQL scan and
+Dependabot are also configured.
+
+# Known Limitations
+
+A round of review found and fixed several bugs:
+
+- **Hands with two or more Aces were scored too low.** Aces used to be
+  valued all-11 or all-1 for the whole hand; a hand like Ace+Ace+9 -
+  which should score 21 (one Ace as 11, the other as 1) - scored 11
+  instead. Fixed by softening Aces one at a time only as needed.
+- **The dealer could stop drawing below 17.** The "must hit until 17"
+  rule was gated on the exact text typed at the "Press Enter to
+  continue" prompt; any stray keystroke ended the dealer's turn early
+  regardless of their total.
+- **`add_score()` ignored its own `filename` parameter**, always
+  hardcoding the module-level `TEXT_FILE` constant instead - invisible
+  in normal play (the one caller always passes `TEXT_FILE`), but it
+  broke the documented API and made the function unsafe to test without
+  mutating the real `highscores.txt`.
+- **The "how many scores to print" logic was hardcoded** to stop at a
+  specific `['Mike', 0.667]` entry - a leftover from whatever sample
+  file existed during development. For any real data without that exact
+  entry, every score got printed instead of just the top three.
+- **A missing `highscores.txt` crashed the game** with an unhandled
+  `FileNotFoundError` instead of being treated as "no scores yet".
+- **A tied game could print no score information at all** - just
+  `-> Push` with nothing else - whenever the dealer needed anything
+  other than exactly one hit to finish, which is a routine occurrence.
+- **A natural blackjack could be hit and busted.** This game's own
+  documented rule is that "an initial two-card deal of 21 ... wins the
+  round automatically", but the hit/stand prompt still appeared even at
+  21, and choosing "hit" by mistake would draw a card and bust an
+  already-winning hand. Now a natural 21 is checked immediately after
+  the deal and resolves the round with no prompt at all - see below.
+- **An empty name was accepted.** `input_name()`'s validation checked
+  for a space and a length limit, but an empty string has neither, so
+  it passed both checks despite the rule being "must be 1 word".
+
+## Rebuilt to match the documented Algorithm
+
+A further review found that the implementation and the README's
+Algorithm section had diverged: the README describes the dealer being
+dealt **two** cards (one hidden, revealed later), with both dealer and
+player checked for a natural blackjack *before* the player's turn -
+covering all four win/push combinations - and the dealer only taking a
+turn at all if the player didn't bust. The code had never implemented
+that; it only ever dealt the dealer **one** card, always played out the
+dealer's turn regardless of what the player did, and had no pre-turn
+blackjack check.
+
+The game has been rebuilt to match the documented algorithm:
+
+- The dealer is now dealt two cards up front, like the player. Only the
+  first is shown (`display_dealer_upcard()`); the second stays hidden
+  until the dealer's hand is revealed.
+- Immediately after the deal, both hands are checked for a natural
+  21. If either (or both) has one, the round resolves right there -
+  the dealer's hand is revealed and the outcome is printed - with no
+  hit/stand prompt at all.
+- If neither has a natural 21, the player plays their turn as before
+  (`player_play()` - unchanged in behaviour, just no longer needs to
+  special-case an incoming 21, since that case can no longer reach it).
+- If the player busts, the round is lost immediately and the dealer's
+  turn is skipped entirely - the dealer's hand is still revealed for
+  transparency, but no further cards are drawn. Previously the dealer
+  always played out their hand and the two totals were compared
+  afterward, regardless of whether the player had already busted.
+- Otherwise the dealer's hidden card is revealed and `dealer_play()`
+  hits until 17 or more, same as before - except the dealer may now
+  need zero hits if the initial two cards already total 17+, which
+  couldn't happen when the dealer only started with one card.
+
+The win/lose/push decision itself was pulled out into a new pure
+function, `resolve_round()`, replacing a deeply nested nine-branch
+`if`/`elif` chain in `play_game()` that had at least one dead branch
+("Two player bust!", unreachable now that a player bust is decided
+before any comparison happens). `resolve_round()` takes the final
+totals and blackjack/bust flags and returns the outcome and message
+directly, so every rule can be tested as a one-line call with no input
+mocking or scripted deck required - see `tests/test_resolve_round.py`.
+
