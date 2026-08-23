@@ -105,8 +105,8 @@ display a table containing all players and their recorded scores.
 --------- Welcome to Blackjack ---------
 
 File   : main.py
-Author : Tan Duc Mai
-Email  : tan.duc.work@gmail.com
+Author : Mai Tan Duc
+Email  : ducmai.network@gmail.com
 
 Do you want to play blackjack (y/n): y
 Enter your name: Royal
