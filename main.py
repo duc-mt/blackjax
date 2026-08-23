@@ -4,7 +4,7 @@
 # =============================================================================
 #
 #        FILE:  main.py
-#      AUTHOR:  Tan Duc Mai <henryfromvietnam@gmail.com>
+#      AUTHOR:  Mai Tan Duc <ducmai.network@gmail.com>
 #     CREATED:  2021-12-10
 # DESCRIPTION:  Implement a card game called Blackjack (21).
 #   I hereby declare that I completed this work without any improper help
@@ -402,7 +402,7 @@ def play_game():
     print("--------- Welcome to Blackjack ---------\n")
 
     # Display the author's details.
-    display_details('main.py', 'Tan Duc Mai', 'henryfromvietnam@gmail.com')
+    display_details('main.py', 'Mai Tan Duc', 'ducmai.network@gmail.com')
 
     # Variable initialisation.
     valid_answers = ['y', 'n']
