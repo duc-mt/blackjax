@@ -7,8 +7,6 @@
 #      AUTHOR:  Mai Tan Duc <ducmai.network@gmail.com>
 #     CREATED:  2021-12-10
 # DESCRIPTION:  A module to draw and fill card.
-#   I hereby declare that I completed this work without any improper help
-#   from a third party and without using any aids other than those cited.
 #
 # =============================================================================
 
