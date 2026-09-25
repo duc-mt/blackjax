@@ -16,6 +16,7 @@ matches the documented Algorithm and Rules:
 """
 
 from __future__ import annotations
+from typing import Any
 
 from unittest import mock
 
@@ -23,13 +24,13 @@ import card_deck
 import main
 
 
-def seed_deck(*cards):
+def seed_deck(*cards: Any) -> None:
     """Cards are drawn in the order given (draw_card() pops from the
     end of the deck list, so we store them reversed)."""
     card_deck.deck = list(reversed(list(cards)))
 
 
-def run_one_round(tmp_path, monkeypatch, inputs):
+def run_one_round(tmp_path: Any, monkeypatch: Any, inputs: Any) -> Any:
     monkeypatch.chdir(tmp_path)
     main.TEXT_FILE = "highscores.txt"
     fake_input = mock.Mock(side_effect=inputs)
@@ -39,9 +40,7 @@ def run_one_round(tmp_path, monkeypatch, inputs):
 
 
 class TestPlayerNaturalBlackjack:
-    def test_wins_immediately_with_no_hit_stand_prompt(
-        self, tmp_path, monkeypatch, capsys
-    ):
+    def test_wins_immediately_with_no_hit_stand_prompt(self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any) -> None:
         seed_deck(
             ["5", "Hearts"], ["6", "Spades"],   # dealer: 11 (no blackjack)
             ["Ace", "Clubs"], ["King", "Diamonds"],  # player: 21
@@ -54,7 +53,7 @@ class TestPlayerNaturalBlackjack:
 
 
 class TestDealerNaturalBlackjack:
-    def test_dealer_wins_immediately(self, tmp_path, monkeypatch, capsys):
+    def test_dealer_wins_immediately(self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any) -> None:
         seed_deck(
             ["Ace", "Hearts"], ["King", "Spades"],  # dealer: 21
             ["9", "Clubs"], ["9", "Diamonds"],        # player: 18
@@ -67,7 +66,7 @@ class TestDealerNaturalBlackjack:
 
 
 class TestBothNaturalBlackjack:
-    def test_is_a_push(self, tmp_path, monkeypatch, capsys):
+    def test_is_a_push(self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any) -> None:
         seed_deck(
             ["Ace", "Hearts"], ["King", "Spades"],  # dealer: 21
             ["Ace", "Clubs"], ["Queen", "Diamonds"],  # player: 21
@@ -80,9 +79,7 @@ class TestBothNaturalBlackjack:
 
 
 class TestPlayerBustSkipsDealerTurnEntirely:
-    def test_dealer_never_takes_a_turn_after_player_busts(
-        self, tmp_path, monkeypatch, capsys
-    ):
+    def test_dealer_never_takes_a_turn_after_player_busts(self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any) -> None:
         seed_deck(
             ["9", "Hearts"], ["8", "Spades"],   # dealer: 17 (already valid)
             ["9", "Clubs"], ["5", "Diamonds"],  # player: 14
@@ -107,9 +104,7 @@ class TestPlayerBustSkipsDealerTurnEntirely:
 
 
 class TestDealerAlreadyAtSeventeenNeedsNoHits:
-    def test_no_press_enter_prompt_when_dealer_starts_at_17_plus(
-        self, tmp_path, monkeypatch, capsys
-    ):
+    def test_no_press_enter_prompt_when_dealer_starts_at_17_plus(self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any) -> None:
         seed_deck(
             ["9", "Hearts"], ["9", "Spades"],   # dealer: 18, already valid
             ["9", "Clubs"], ["6", "Diamonds"],  # player: 15
@@ -128,7 +123,7 @@ class TestDealerAlreadyAtSeventeenNeedsNoHits:
 
 
 class TestPushAfterDealerTakesMultipleHits:
-    def test_push_shows_both_scores(self, tmp_path, monkeypatch, capsys):
+    def test_push_shows_both_scores(self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any) -> None:
         seed_deck(
             ["2", "Hearts"], ["3", "Spades"],     # dealer: 5
             ["10", "Clubs"], ["7", "Diamonds"],   # player: 17

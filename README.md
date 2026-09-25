@@ -2,6 +2,12 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 # Table of Contents
 
+[![CI](https://github.com/DUC-MT/blackjax/actions/workflows/ci.yml/badge.svg)](https://github.com/DUC-MT/blackjax/actions/workflows/ci.yml)
+[![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org/downloads/)
+[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
 - [Aim](#aim)
 - [Total Calculation](#total-calculation)
 - [Implementation](#implementation)
@@ -330,4 +336,3 @@ before any comparison happens). `resolve_round()` takes the final
 totals and blackjack/bust flags and returns the outcome and message
 directly, so every rule can be tested as a one-line call with no input
 mocking or scripted deck required - see `tests/test_resolve_round.py`.
-

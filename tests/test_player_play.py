@@ -10,6 +10,7 @@ asked, and is expected to choose to stand.
 """
 
 from __future__ import annotations
+from typing import Any
 
 from unittest import mock
 
@@ -17,12 +18,12 @@ import card_deck
 import main
 
 
-def seed_deck(*cards):
+def seed_deck(*cards: Any) -> None:
     card_deck.deck = list(reversed(list(cards)))
 
 
 class TestNormalPlay:
-    def test_hitting_then_standing(self):
+    def test_hitting_then_standing(self: Any) -> None:
         seed_deck(["3", "Hearts"], ["4", "Spades"])
         hand = [["5", "Clubs"], ["6", "Diamonds"]]  # total 11
 
@@ -32,7 +33,7 @@ class TestNormalPlay:
         assert total == 18
         assert turns == 2
 
-    def test_busting_ends_the_turn_without_a_further_prompt(self):
+    def test_busting_ends_the_turn_without_a_further_prompt(self: Any) -> None:
         seed_deck(["10", "Hearts"])
         hand = [["9", "Clubs"], ["5", "Diamonds"]]  # total 14
 
@@ -43,7 +44,7 @@ class TestNormalPlay:
         assert turns == 1
         assert mock_input.call_count == 1  # no prompt after busting
 
-    def test_reaching_exactly_21_via_a_hit_still_prompts_again(self):
+    def test_reaching_exactly_21_via_a_hit_still_prompts_again(self: Any) -> None:
         """This is the literal Rules-section behaviour: the player
         keeps being asked until they choose to stand, or bust - there's
         no automatic stop at 21 reached mid-turn (only a *natural*

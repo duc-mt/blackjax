@@ -19,19 +19,18 @@ Covers three bugs found during review:
 """
 
 from __future__ import annotations
+from typing import Any
 
 import main
 
 
-def read_lines(path):
+def read_lines(path: Any) -> Any:
     with open(path) as f:
         return [line.rstrip("\n") for line in f]
 
 
 class TestUsesThePassedFilename:
-    def test_writes_to_the_given_file_not_text_file_constant(
-        self, scorefile, monkeypatch
-    ):
+    def test_writes_to_the_given_file_not_text_file_constant(self: Any, scorefile: Any, monkeypatch: Any) -> None:
         # Point the module constant somewhere that must NOT be written
         # to, to prove add_score() isn't silently falling back to it.
         monkeypatch.setattr(main, "TEXT_FILE", "/nonexistent/should-not-be-used.txt")
@@ -43,7 +42,7 @@ class TestUsesThePassedFilename:
 
 
 class TestMissingFileIsTreatedAsEmpty:
-    def test_first_ever_score_creates_the_file(self, scorefile):
+    def test_first_ever_score_creates_the_file(self: Any, scorefile: Any) -> None:
         assert not scorefile.exists()
 
         main.add_score("Henry", 50.0, str(scorefile))
@@ -52,14 +51,14 @@ class TestMissingFileIsTreatedAsEmpty:
 
 
 class TestHighScoreComparison:
-    def test_higher_score_becomes_the_new_first_line(self, scorefile):
+    def test_higher_score_becomes_the_new_first_line(self: Any, scorefile: Any) -> None:
         scorefile.write_text("Alice 40.000\nBob 30.000\n")
 
         main.add_score("Henry", 100.0, str(scorefile))
 
         assert read_lines(scorefile)[0] == "Henry 100.000"
 
-    def test_lower_score_is_appended_not_inserted_first(self, scorefile):
+    def test_lower_score_is_appended_not_inserted_first(self: Any, scorefile: Any) -> None:
         scorefile.write_text("Alice 40.000\nBob 30.000\n")
 
         main.add_score("Henry", 10.0, str(scorefile))
@@ -72,9 +71,7 @@ class TestHighScoreComparison:
 class TestDisplayIsNotHardcodedToASpecificPlayer:
     """Regression test for the ['Mike', 0.667] magic check."""
 
-    def test_prints_top_three_generically_no_name_dependency(
-        self, scorefile, capsys
-    ):
+    def test_prints_top_three_generically_no_name_dependency(self: Any, scorefile: Any, capsys: Any) -> None:
         # None of these names is "Mike" and none of these scores is
         # 0.667 - the old hardcoded check would never fire here, so
         # every single line would get printed instead of just the top
@@ -103,7 +100,7 @@ class TestDisplayIsNotHardcodedToASpecificPlayer:
             "Dave 60.000",
         ]
 
-    def test_blank_lines_in_the_file_are_removed(self, scorefile):
+    def test_blank_lines_in_the_file_are_removed(self: Any, scorefile: Any) -> None:
         scorefile.write_text("Alice 40.000\n\nBob 30.000\n\n")
 
         main.add_score("Henry", 10.0, str(scorefile))
