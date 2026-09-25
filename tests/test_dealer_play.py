@@ -9,6 +9,7 @@ pops from the end) so the sequence of cards drawn is deterministic.
 """
 
 from __future__ import annotations
+from typing import Any
 
 from unittest import mock
 
@@ -16,14 +17,14 @@ import card_deck
 import main
 
 
-def seed_deck(*cards):
+def seed_deck(*cards: Any) -> None:
     """Cards are drawn in the order given (draw_card() pops from the
     end of the deck list, so we store them reversed)."""
     card_deck.deck = list(reversed(list(cards)))
 
 
 class TestDealerAlwaysReachesAtLeast17:
-    def test_stops_as_soon_as_total_reaches_17(self, capsys):
+    def test_stops_as_soon_as_total_reaches_17(self: Any, capsys: Any) -> None:
         seed_deck(["6", "Hearts"], ["9", "Spades"])
         hand = [["2", "Diamonds"]]  # total 2
 
@@ -33,7 +34,7 @@ class TestDealerAlwaysReachesAtLeast17:
         assert total == 17  # 2 + 9 + 6
         assert turns == 2
 
-    def test_non_blank_input_does_not_end_the_turn_early(self, capsys):
+    def test_non_blank_input_does_not_end_the_turn_early(self: Any, capsys: Any) -> None:
         """This is the regression case: previously, typing anything
         other than a bare Enter stopped the dealer immediately,
         regardless of their total."""
@@ -48,7 +49,7 @@ class TestDealerAlwaysReachesAtLeast17:
         assert total >= 17
         assert turns == 2
 
-    def test_stops_immediately_once_at_least_17_from_a_single_hit(self, capsys):
+    def test_stops_immediately_once_at_least_17_from_a_single_hit(self: Any, capsys: Any) -> None:
         seed_deck(["8", "Hearts"])
         hand = [["9", "Diamonds"]]  # total 9 -> one hit brings it to 17
 

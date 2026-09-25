@@ -21,7 +21,7 @@ TEXT_FILE = 'highscores.txt'
 
 
 # ---------------------------- Function Definitions ---------------------------
-def display_details(filename, author, email):
+def display_details(filename: str, author: str, email: str) -> None:
     """Display the author's details."""
     print(f'File   : {filename}',
           f'Author : {author}',
@@ -30,7 +30,7 @@ def display_details(filename, author, email):
           end='\n\n')
 
 
-def input_name():
+def input_name() -> str:
     """Prompt for, read, and validate the player's name.
 
     Returns
@@ -38,7 +38,7 @@ def input_name():
     str
         The valid user's input name.
     """
-    name = None
+    name = ""
 
     # NOTE: this used to loop `while name is None or ' ' in name or
     # len(name) >= 12`. An empty string has no space in it and its
@@ -46,7 +46,7 @@ def input_name():
     # accepted as a valid name - even though the rule is "must be 1
     # word", and an empty name isn't a word at all. It would then show
     # up blank everywhere the name is displayed (e.g. "'s hand: ...").
-    while name is None or name == '' or ' ' in name or len(name) >= 12:
+    while name == '' or ' ' in name or len(name) >= 12:
         name = input('Enter your name: ')
         if name == '' or ' ' in name or len(name) >= 12:
             print('ERROR: Must be 1 word and less than 12 characters.')
@@ -55,7 +55,7 @@ def input_name():
     return name
 
 
-def display_hand(player_name, hand):
+def display_hand(player_name: str, hand: list[list[str]]) -> None:
     """Displays the hand and its total to the screen.
 
     Parameters
@@ -78,7 +78,7 @@ def display_hand(player_name, hand):
     print(f'Hand Total: ({get_hand_total(hand)})', end='\n\n')
 
 
-def display_dealer_upcard(hand):
+def display_dealer_upcard(hand: list[list[str]]) -> None:
     """Display only the dealer's face-up card, keeping the rest hidden.
 
     Standard Blackjack rules only show one of the dealer's initial two
@@ -100,7 +100,7 @@ def display_dealer_upcard(hand):
           end='\n\n')
 
 
-def get_hand_total(hand):
+def get_hand_total(hand: list[list[str]]) -> int:
     """Take a list of cards and returns the total point value of them.
 
     Parameters
@@ -145,7 +145,7 @@ def get_hand_total(hand):
     return point
 
 
-def input_hit_choice():
+def input_hit_choice() -> str:
     """Prompt for, read, and validate the user's choice.
 
     Returns
@@ -153,10 +153,10 @@ def input_hit_choice():
     str
         The valid user choice which is either 'h' (hit) or 's' (stand).
     """
-    choice = None
+    choice = ''
     valid_choices = ['h', 's']
 
-    while choice is None or choice not in valid_choices:
+    while choice not in valid_choices:
         choice = input('Do you want to hit or stand (h/s): ')
         if choice not in valid_choices:
             print("ERROR: Must be 'h' or 's'.")
@@ -165,7 +165,7 @@ def input_hit_choice():
     return choice
 
 
-def player_play(name, hand):
+def player_play(name: str, hand: list[list[str]]) -> tuple[int, int]:
     """
       Continue to draw cards until the user responds
       's' (stand) or their cards' total exceeds 21.
@@ -189,10 +189,10 @@ def player_play(name, hand):
     # 21 reached via a hit; the player is still asked, and may choose to
     # stand (the sensible choice) - the game doesn't make that choice
     # for them.
-    user_hit = None
+    user_hit = ''
     count = 0
 
-    while user_hit is None or (user_hit == 'h' and get_hand_total(hand) <= 21):
+    while user_hit == '' or (user_hit == 'h' and get_hand_total(hand) <= 21):
         user_hit = input_hit_choice()
 
         if user_hit == 'h':
@@ -205,7 +205,7 @@ def player_play(name, hand):
     return get_hand_total(hand), count
 
 
-def dealer_play(hand):
+def dealer_play(hand: list[list[str]]) -> tuple[int, int]:
     """Continue to draw cards until the dealer's cards' total reaches 17.
 
     Parameters
@@ -240,7 +240,7 @@ def dealer_play(hand):
     return get_hand_total(hand), count
 
 
-def add_score(name, score, filename):
+def add_score(name: str, score: float, filename: str) -> None:
     """Read the file to check if score is greater than the others in the file.
 
     Parameters
@@ -291,27 +291,29 @@ def add_score(name, score, filename):
     # This checks if player's score is greater than those of other.
     is_new_highscore = True
 
+    from typing import Any
+    parsed_scores: list[list[Any]] = []
     # Change {line_list}'s format to [['Tiffany', 37.500], ['Mike', 0.667]].
-    for index in range(len(line_list)):
+    for line in line_list:
         # Strip \n from each element.
         # Split the name and the score into two sub-lists.
-        line_list[index] = line_list[index].rstrip().split()
-        # Convert the score part into a float.
-        line_list[index][1] = float(line_list[index][1])
+        parts = line.rstrip().split()
+        if len(parts) >= 2:
+            parsed_scores.append([parts[0], float(parts[1])])
 
     # Compare player's score with those of the others in the score file.
-    for line in line_list:
-        if line[1] > score:
+    for pscore in parsed_scores:
+        if pscore[1] > score:
             is_new_highscore = False
 
     # Adjust the score to 3 decimal points.
-    score = f'{score:.3f}'
+    score_str = f'{score:.3f}'
 
     if is_new_highscore:
         # This program adds the new high score to the first line.
         with open(filename, 'w') as write_outfile:
             # Write the high score to file.
-            write_outfile.write(f'{name} {score}\n')
+            write_outfile.write(f'{name} {score_str}\n')
 
             # Display the first three lines: the new high score plus
             # the next two scores that were already in the file.
@@ -326,26 +328,26 @@ def add_score(name, score, filename):
             # just the top three the comment describes.
             print('New High Score!' + '\n',
                   'NAME\tSCORE',
-                  f'{name}\t{score}',
+                  f'{name}\t{score_str}',
                   sep='\n')
 
-            for position, line in enumerate(line_list):
+            for position, score_data in enumerate(parsed_scores):
                 # Adjust them to 3 decimal points and write them to file.
-                line_score = f'{line[1]:.3f}'
-                write_outfile.write(f'{line[0]} {line_score}\n')
+                line_score = f'{score_data[1]:.3f}'
+                write_outfile.write(f'{score_data[0]} {line_score}\n')
                 # Only display the two scores right below the new one.
                 if position < 2:
-                    print(f'{line[0]}\t{line_score}')
+                    print(f'{score_data[0]}\t{line_score}')
             print()
 
     else:
         # This program appends the score (not a high score) to the file.
         with open(filename, 'a') as append_outfile:
-            append_outfile.write(f'{name} {score}\n')
+            append_outfile.write(f'{name} {score_str}\n')
 
 
-def resolve_round(name, player_point, dealer_point,
-                  player_blackjack, dealer_blackjack, player_bust):
+def resolve_round(name: str, player_point: int, dealer_point: int,
+                  player_blackjack: bool, dealer_blackjack: bool, player_bust: bool) -> tuple[str, str]:
     """Determine the outcome of a finished round and the message to show.
 
     Implements the Rules section of the README as a single, pure
@@ -396,7 +398,7 @@ def resolve_round(name, player_point, dealer_point,
     return 'lose', f'{score_line}  ->  Dealer wins!'
 
 
-def play_game():
+def play_game() -> None:
     print("--------- Welcome to Blackjack ---------\n")
 
     # Display the author's details.
@@ -410,8 +412,8 @@ def play_game():
     tied = 0
 
     # Ask to play.
-    play = None
-    while play is None or play not in valid_answers:
+    play = ''
+    while play not in valid_answers:
         play = input('Do you want to play blackjack (y/n): ')
         if play not in valid_answers:
             print("ERROR: Only enter 'y' or 'n'")
@@ -473,8 +475,8 @@ def play_game():
             print(f"\n{'-' * 40}\n")
 
             # Ask to play again.
-            again = None
-            while again is None or again not in valid_answers:
+            again = ''
+            while again not in valid_answers:
                 again = input('Do you want to play again (y/n): ')
                 if again not in valid_answers:
                     print("ERROR: Only enter 'y' or 'n'")

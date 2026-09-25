@@ -19,11 +19,11 @@ from random import shuffle
 # Contains cards in the format [value, suit]
 # DO NOT ACCESS THIS VARIABLE!
 # Call draw_card() instead.
-deck = []
+deck: list[list[str]] = []
 
 
 # ---------------------------- Function Definitions ---------------------------
-def draw_card():
+def draw_card() -> list[str]:
     """
     Removes and returns the last item from the global deck.
     The deck will be reset after the last card is drawn.
@@ -34,7 +34,7 @@ def draw_card():
     return deck.pop()
 
 
-def fill(deck):
+def fill(deck: list[list[str]]) -> None:
     """
     DO NOT call this function.
     This function is called automatically by draw_card().

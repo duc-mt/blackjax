@@ -7,13 +7,14 @@ legal. Each test names a hand and its correct blackjack value.
 """
 
 from __future__ import annotations
+from typing import Any
 
 import pytest
 
 import main
 
 
-def card(value, suit="Hearts"):
+def card(value: Any, suit: Any = "Hearts") -> Any:
     return [value, suit]
 
 
@@ -40,9 +41,9 @@ def card(value, suit="Hearts"):
         ([card("Ace"), card("Ace"), card("Ace"), card("Ace"), card("8")], 12),
     ],
 )
-def test_get_hand_total(hand, expected):
+def test_get_hand_total(hand: Any, expected: Any) -> None:
     assert main.get_hand_total(hand) == expected
 
 
-def test_empty_hand_is_zero():
+def test_empty_hand_is_zero() -> None:
     assert main.get_hand_total([]) == 0

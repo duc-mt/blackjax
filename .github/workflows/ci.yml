@@ -26,6 +26,19 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - run: ruff check --select F,E9,B,SIM,RUF .
 
+  typecheck:
+    name: ⤵️ Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: mypy .
+
+
   test:
     name: ⤵️ Test (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
