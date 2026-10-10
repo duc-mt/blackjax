@@ -1,8 +1,7 @@
-
 """
 ==============================================================================
 Module Name:   test_resolve_round.py
-Description:   Unit tests for main.resolve_round().  This is the pure decision logic behind who wins a round, extracted from play_game() so every branch of the Rules section can be tested directly without playing through an entire scripted game.
+Description:   Source module test_resolve_round.py.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0

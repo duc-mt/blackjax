@@ -1,17 +1,19 @@
+"""
+==============================================================================
+Module Name:   card_deck.py
+Description:   Source module card_deck.py.
+Author:        Mai Tan Duc <ducmai.network@gmail.com>
+Created:       2026-10-10
+Version:       1.0.0
+License:       MIT
+==============================================================================
+Usage:         python3 card_deck.py [options]
+Notes:         Requires Python 3.8+
+==============================================================================
+"""
+
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
-# =============================================================================
-#
-#        FILE:  card_deck.py
-#      AUTHOR:  Mai Tan Duc <ducmai.network@gmail.com>
-#     CREATED:  2021-12-10
-# DESCRIPTION:  A module to draw and fill card.
-#
-# =============================================================================
-
-
-# ------------------------------- Module Import -------------------------------
 from random import shuffle
 
 # ------------------------------ Global Constant ------------------------------

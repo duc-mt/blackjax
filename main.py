@@ -1,19 +1,19 @@
+"""
+==============================================================================
+Module Name:   main.py
+Description:   Source module main.py.
+Author:        Mai Tan Duc <ducmai.network@gmail.com>
+Created:       2026-10-10
+Version:       1.0.0
+License:       MIT
+==============================================================================
+Usage:         python3 main.py [options]
+Notes:         Requires Python 3.8+
+==============================================================================
+"""
+
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
-# =============================================================================
-#
-#        FILE:  main.py
-#      AUTHOR:  Mai Tan Duc <ducmai.network@gmail.com>
-#     CREATED:  2021-12-10
-# DESCRIPTION:  Implement a card game called Blackjack (21).
-#
-# =============================================================================
-
-
-# ------------------------------- Module Import -------------------------------
-"""The module draws from 52 cards each time a player/computer takes turn."""
-
 import card_deck
 
 # ------------------------------ Global Constant ------------------------------

@@ -1,8 +1,7 @@
-
 """
 ==============================================================================
 Module Name:   test_get_hand_total.py
-Description:   Regression tests for main.get_hand_total().  The original implementation valued every Ace as either all-11 or all-1, which undercounts any hand with two or more Aces where a mixed valuation (one Ace as 11, the rest as 1) would score higher and be legal. Each test names a hand and its correct blackjack value.
+Description:   Source module test_get_hand_total.py.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0

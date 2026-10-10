@@ -1,8 +1,7 @@
-
 """
 ==============================================================================
 Module Name:   conftest.py
-Description:   Shared pytest fixtures.
+Description:   Source module conftest.py.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
