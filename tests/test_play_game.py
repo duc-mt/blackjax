@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 ==============================================================================
 Module Name:   test_play_game.py
@@ -53,10 +54,14 @@ def run_one_round(tmp_path: Any, monkeypatch: Any, inputs: Any) -> Any:
 
 
 class TestPlayerNaturalBlackjack:
-    def test_wins_immediately_with_no_hit_stand_prompt(self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any) -> None:
+    def test_wins_immediately_with_no_hit_stand_prompt(
+        self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any
+    ) -> None:
         seed_deck(
-            ["5", "Hearts"], ["6", "Spades"],   # dealer: 11 (no blackjack)
-            ["Ace", "Clubs"], ["King", "Diamonds"],  # player: 21
+            ["5", "Hearts"],
+            ["6", "Spades"],  # dealer: 11 (no blackjack)
+            ["Ace", "Clubs"],
+            ["King", "Diamonds"],  # player: 21
         )
         run_one_round(tmp_path, monkeypatch, ["y", "Henry", "n"])
 
@@ -66,10 +71,14 @@ class TestPlayerNaturalBlackjack:
 
 
 class TestDealerNaturalBlackjack:
-    def test_dealer_wins_immediately(self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any) -> None:
+    def test_dealer_wins_immediately(
+        self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any
+    ) -> None:
         seed_deck(
-            ["Ace", "Hearts"], ["King", "Spades"],  # dealer: 21
-            ["9", "Clubs"], ["9", "Diamonds"],        # player: 18
+            ["Ace", "Hearts"],
+            ["King", "Spades"],  # dealer: 21
+            ["9", "Clubs"],
+            ["9", "Diamonds"],  # player: 18
         )
         run_one_round(tmp_path, monkeypatch, ["y", "Henry", "n"])
 
@@ -81,8 +90,10 @@ class TestDealerNaturalBlackjack:
 class TestBothNaturalBlackjack:
     def test_is_a_push(self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any) -> None:
         seed_deck(
-            ["Ace", "Hearts"], ["King", "Spades"],  # dealer: 21
-            ["Ace", "Clubs"], ["Queen", "Diamonds"],  # player: 21
+            ["Ace", "Hearts"],
+            ["King", "Spades"],  # dealer: 21
+            ["Ace", "Clubs"],
+            ["Queen", "Diamonds"],  # player: 21
         )
         run_one_round(tmp_path, monkeypatch, ["y", "Henry", "n"])
 
@@ -92,15 +103,17 @@ class TestBothNaturalBlackjack:
 
 
 class TestPlayerBustSkipsDealerTurnEntirely:
-    def test_dealer_never_takes_a_turn_after_player_busts(self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any) -> None:
+    def test_dealer_never_takes_a_turn_after_player_busts(
+        self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any
+    ) -> None:
         seed_deck(
-            ["9", "Hearts"], ["8", "Spades"],   # dealer: 17 (already valid)
-            ["9", "Clubs"], ["5", "Diamonds"],  # player: 14
-            ["10", "Hearts"],                    # player hits -> 24 (bust)
+            ["9", "Hearts"],
+            ["8", "Spades"],  # dealer: 17 (already valid)
+            ["9", "Clubs"],
+            ["5", "Diamonds"],  # player: 14
+            ["10", "Hearts"],  # player hits -> 24 (bust)
         )
-        fake_input = run_one_round(
-            tmp_path, monkeypatch, ["y", "Henry", "h", "n"]
-        )
+        fake_input = run_one_round(tmp_path, monkeypatch, ["y", "Henry", "h", "n"])
 
         # Exactly 4 input() calls: play, name, one hit choice, play-again.
         # If the dealer had incorrectly taken a turn, a "Press Enter"
@@ -117,14 +130,16 @@ class TestPlayerBustSkipsDealerTurnEntirely:
 
 
 class TestDealerAlreadyAtSeventeenNeedsNoHits:
-    def test_no_press_enter_prompt_when_dealer_starts_at_17_plus(self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any) -> None:
+    def test_no_press_enter_prompt_when_dealer_starts_at_17_plus(
+        self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any
+    ) -> None:
         seed_deck(
-            ["9", "Hearts"], ["9", "Spades"],   # dealer: 18, already valid
-            ["9", "Clubs"], ["6", "Diamonds"],  # player: 15
+            ["9", "Hearts"],
+            ["9", "Spades"],  # dealer: 18, already valid
+            ["9", "Clubs"],
+            ["6", "Diamonds"],  # player: 15
         )
-        fake_input = run_one_round(
-            tmp_path, monkeypatch, ["y", "Henry", "s", "n"]
-        )
+        fake_input = run_one_round(tmp_path, monkeypatch, ["y", "Henry", "s", "n"])
 
         # play, name, stand-choice, play-again - no "Press Enter" call.
         assert fake_input.call_count == 4
@@ -136,15 +151,18 @@ class TestDealerAlreadyAtSeventeenNeedsNoHits:
 
 
 class TestPushAfterDealerTakesMultipleHits:
-    def test_push_shows_both_scores(self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any) -> None:
+    def test_push_shows_both_scores(
+        self: Any, tmp_path: Any, monkeypatch: Any, capsys: Any
+    ) -> None:
         seed_deck(
-            ["2", "Hearts"], ["3", "Spades"],     # dealer: 5
-            ["10", "Clubs"], ["7", "Diamonds"],   # player: 17
-            ["5", "Hearts"], ["7", "Spades"],     # dealer hits: 5->10->17
+            ["2", "Hearts"],
+            ["3", "Spades"],  # dealer: 5
+            ["10", "Clubs"],
+            ["7", "Diamonds"],  # player: 17
+            ["5", "Hearts"],
+            ["7", "Spades"],  # dealer hits: 5->10->17
         )
-        run_one_round(
-            tmp_path, monkeypatch, ["y", "Henry", "s", "", "", "n"]
-        )
+        run_one_round(tmp_path, monkeypatch, ["y", "Henry", "s", "", "", "n"])
 
         printed = capsys.readouterr().out
         assert "Dealer: 17" in printed

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 ==============================================================================
 Module Name:   test_input_validation.py
@@ -25,9 +26,7 @@ class TestInputName:
             assert main.input_name() == "Henry"
 
     def test_rejects_a_name_with_a_space(self: Any, capsys: Any) -> None:
-        with mock.patch(
-            "builtins.input", side_effect=["John Smith", "Henry"]
-        ):
+        with mock.patch("builtins.input", side_effect=["John Smith", "Henry"]):
             assert main.input_name() == "Henry"
         assert "ERROR" in capsys.readouterr().out
 
@@ -57,7 +56,9 @@ class TestInputHitChoice:
         with mock.patch("builtins.input", return_value="s"):
             assert main.input_hit_choice() == "s"
 
-    def test_rejects_anything_else_then_accepts_a_valid_choice(self: Any, capsys: Any) -> None:
+    def test_rejects_anything_else_then_accepts_a_valid_choice(
+        self: Any, capsys: Any
+    ) -> None:
         with mock.patch("builtins.input", side_effect=["hit", "h"]):
             assert main.input_hit_choice() == "h"
         assert "ERROR" in capsys.readouterr().out

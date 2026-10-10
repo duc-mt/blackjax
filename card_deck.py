@@ -43,11 +43,20 @@ def fill(deck: list[list[str]]) -> None:
     """
     deck.clear()
     for value in [
-            'Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10',
-            'Jack', 'Queen', 'King'
+        "Ace",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "Jack",
+        "Queen",
+        "King",
     ]:
-        for suit in [
-                'Hearts', 'Spades', 'Diamonds', 'Clubs'
-        ]:
+        for suit in ["Hearts", "Spades", "Diamonds", "Clubs"]:
             deck.append([value, suit])
     shuffle(deck)

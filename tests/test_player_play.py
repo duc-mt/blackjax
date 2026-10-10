@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 ==============================================================================
 Module Name:   test_player_play.py
@@ -66,9 +67,7 @@ class TestNormalPlay:
         seed_deck(["10", "Hearts"])
         hand = [["6", "Clubs"], ["5", "Diamonds"]]  # total 11
 
-        with mock.patch(
-            "builtins.input", side_effect=["h", "s"]
-        ) as mock_input:
+        with mock.patch("builtins.input", side_effect=["h", "s"]) as mock_input:
             total, turns = main.player_play("Henry", hand)
 
         assert total == 21

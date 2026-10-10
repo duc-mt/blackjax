@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 ==============================================================================
 Module Name:   test_dealer_play.py
@@ -47,22 +48,24 @@ class TestDealerAlwaysReachesAtLeast17:
         assert total == 17  # 2 + 9 + 6
         assert turns == 2
 
-    def test_non_blank_input_does_not_end_the_turn_early(self: Any, capsys: Any) -> None:
+    def test_non_blank_input_does_not_end_the_turn_early(
+        self: Any, capsys: Any
+    ) -> None:
         """This is the regression case: previously, typing anything
         other than a bare Enter stopped the dealer immediately,
         regardless of their total."""
         seed_deck(["6", "Hearts"], ["9", "Spades"])
         hand = [["2", "Diamonds"]]  # total 2, needs 17+
 
-        with mock.patch(
-            "builtins.input", side_effect=["x", "garbage", "whatever"]
-        ):
+        with mock.patch("builtins.input", side_effect=["x", "garbage", "whatever"]):
             total, turns = main.dealer_play(hand)
 
         assert total >= 17
         assert turns == 2
 
-    def test_stops_immediately_once_at_least_17_from_a_single_hit(self: Any, capsys: Any) -> None:
+    def test_stops_immediately_once_at_least_17_from_a_single_hit(
+        self: Any, capsys: Any
+    ) -> None:
         seed_deck(["8", "Hearts"])
         hand = [["9", "Diamonds"]]  # total 9 -> one hit brings it to 17
 

@@ -13,21 +13,24 @@
 
 # ------------------------------- Module Import -------------------------------
 """The module draws from 52 cards each time a player/computer takes turn."""
+
 import card_deck
 
 
 # ------------------------------ Global Constant ------------------------------
-TEXT_FILE = 'highscores.txt'
+TEXT_FILE = "highscores.txt"
 
 
 # ---------------------------- Function Definitions ---------------------------
 def display_details(filename: str, author: str, email: str) -> None:
     """Display the author's details."""
-    print(f'File   : {filename}',
-          f'Author : {author}',
-          f'Email  : {email}',
-          sep='\n',
-          end='\n\n')
+    print(
+        f"File   : {filename}",
+        f"Author : {author}",
+        f"Email  : {email}",
+        sep="\n",
+        end="\n\n",
+    )
 
 
 def input_name() -> str:
@@ -46,10 +49,10 @@ def input_name() -> str:
     # accepted as a valid name - even though the rule is "must be 1
     # word", and an empty name isn't a word at all. It would then show
     # up blank everywhere the name is displayed (e.g. "'s hand: ...").
-    while name == '' or ' ' in name or len(name) >= 12:
-        name = input('Enter your name: ')
-        if name == '' or ' ' in name or len(name) >= 12:
-            print('ERROR: Must be 1 word and less than 12 characters.')
+    while name == "" or " " in name or len(name) >= 12:
+        name = input("Enter your name: ")
+        if name == "" or " " in name or len(name) >= 12:
+            print("ERROR: Must be 1 word and less than 12 characters.")
         print()
 
     return name
@@ -70,12 +73,12 @@ def display_hand(player_name: str, hand: list[list[str]]) -> None:
     None
     """
     # Output the hand.
-    print(f'{player_name}\'s hand', end=': ')
-    card_strings = [f'{card[0]} of {card[1]}' for card in hand]
-    print(', '.join(card_strings))
+    print(f"{player_name}'s hand", end=": ")
+    card_strings = [f"{card[0]} of {card[1]}" for card in hand]
+    print(", ".join(card_strings))
 
     # Output the total value.
-    print(f'Hand Total: ({get_hand_total(hand)})', end='\n\n')
+    print(f"Hand Total: ({get_hand_total(hand)})", end="\n\n")
 
 
 def display_dealer_upcard(hand: list[list[str]]) -> None:
@@ -96,8 +99,7 @@ def display_dealer_upcard(hand: list[list[str]]) -> None:
     -------
     None
     """
-    print(f"Dealer's hand: {hand[0][0]} of {hand[0][1]}, [face-down card]",
-          end='\n\n')
+    print(f"Dealer's hand: {hand[0][0]} of {hand[0][1]}, [face-down card]", end="\n\n")
 
 
 def get_hand_total(hand: list[list[str]]) -> int:
@@ -119,10 +121,10 @@ def get_hand_total(hand: list[list[str]]) -> int:
 
     # Add the value of cards, treating every Ace as 11 for now.
     for card in hand:
-        if card[0] == 'Ace':
+        if card[0] == "Ace":
             count_ace += 1
             point += 11
-        elif card[0] in ['Jack', 'Queen', 'King']:
+        elif card[0] in ["Jack", "Queen", "King"]:
             point += 10
         else:
             point += int(card[0])
@@ -153,11 +155,11 @@ def input_hit_choice() -> str:
     str
         The valid user choice which is either 'h' (hit) or 's' (stand).
     """
-    choice = ''
-    valid_choices = ['h', 's']
+    choice = ""
+    valid_choices = ["h", "s"]
 
     while choice not in valid_choices:
-        choice = input('Do you want to hit or stand (h/s): ')
+        choice = input("Do you want to hit or stand (h/s): ")
         if choice not in valid_choices:
             print("ERROR: Must be 'h' or 's'.")
     print()
@@ -189,13 +191,13 @@ def player_play(name: str, hand: list[list[str]]) -> tuple[int, int]:
     # 21 reached via a hit; the player is still asked, and may choose to
     # stand (the sensible choice) - the game doesn't make that choice
     # for them.
-    user_hit = ''
+    user_hit = ""
     count = 0
 
-    while user_hit == '' or (user_hit == 'h' and get_hand_total(hand) <= 21):
+    while user_hit == "" or (user_hit == "h" and get_hand_total(hand) <= 21):
         user_hit = input_hit_choice()
 
-        if user_hit == 'h':
+        if user_hit == "h":
             # Draw another card.
             hand.append(card_deck.draw_card())
             count += 1
@@ -232,7 +234,7 @@ def dealer_play(hand: list[list[str]]) -> tuple[int, int]:
         hand.append(card_deck.draw_card())
         count += 1
         # Output the total value.
-        display_hand('Dealer', hand)
+        display_hand("Dealer", hand)
 
         input('Press "Enter" to continue...')
         print()
@@ -275,10 +277,10 @@ def add_score(name: str, score: float, filename: str) -> None:
     except FileNotFoundError:
         line_list = []
     else:
-        if '' in line_list or '\n' in line_list:
-            with open(filename, 'w') as removed_blank_outfile:
+        if "" in line_list or "\n" in line_list:
+            with open(filename, "w") as removed_blank_outfile:
                 for line in line_list:
-                    if line and line != '\n':
+                    if line and line != "\n":
                         removed_blank_outfile.write(line)
 
     # This program adds/appends the new score to the score file.
@@ -292,6 +294,7 @@ def add_score(name: str, score: float, filename: str) -> None:
     is_new_highscore = True
 
     from typing import Any
+
     parsed_scores: list[list[Any]] = []
     # Change {line_list}'s format to [['Tiffany', 37.500], ['Mike', 0.667]].
     for line in line_list:
@@ -307,13 +310,13 @@ def add_score(name: str, score: float, filename: str) -> None:
             is_new_highscore = False
 
     # Adjust the score to 3 decimal points.
-    score_str = f'{score:.3f}'
+    score_str = f"{score:.3f}"
 
     if is_new_highscore:
         # This program adds the new high score to the first line.
-        with open(filename, 'w') as write_outfile:
+        with open(filename, "w") as write_outfile:
             # Write the high score to file.
-            write_outfile.write(f'{name} {score_str}\n')
+            write_outfile.write(f"{name} {score_str}\n")
 
             # Display the first three lines: the new high score plus
             # the next two scores that were already in the file.
@@ -326,28 +329,36 @@ def add_score(name: str, score: float, filename: str) -> None:
             # comparison never matched, so continue_print never turned
             # False and *every* existing score got printed instead of
             # just the top three the comment describes.
-            print('New High Score!' + '\n',
-                  'NAME\tSCORE',
-                  f'{name}\t{score_str}',
-                  sep='\n')
+            print(
+                "New High Score!" + "\n",
+                "NAME\tSCORE",
+                f"{name}\t{score_str}",
+                sep="\n",
+            )
 
             for position, score_data in enumerate(parsed_scores):
                 # Adjust them to 3 decimal points and write them to file.
-                line_score = f'{score_data[1]:.3f}'
-                write_outfile.write(f'{score_data[0]} {line_score}\n')
+                line_score = f"{score_data[1]:.3f}"
+                write_outfile.write(f"{score_data[0]} {line_score}\n")
                 # Only display the two scores right below the new one.
                 if position < 2:
-                    print(f'{score_data[0]}\t{line_score}')
+                    print(f"{score_data[0]}\t{line_score}")
             print()
 
     else:
         # This program appends the score (not a high score) to the file.
-        with open(filename, 'a') as append_outfile:
-            append_outfile.write(f'{name} {score_str}\n')
+        with open(filename, "a") as append_outfile:
+            append_outfile.write(f"{name} {score_str}\n")
 
 
-def resolve_round(name: str, player_point: int, dealer_point: int,
-                  player_blackjack: bool, dealer_blackjack: bool, player_bust: bool) -> tuple[str, str]:
+def resolve_round(
+    name: str,
+    player_point: int,
+    dealer_point: int,
+    player_blackjack: bool,
+    dealer_blackjack: bool,
+    player_bust: bool,
+) -> tuple[str, str]:
     """Determine the outcome of a finished round and the message to show.
 
     Implements the Rules section of the README as a single, pure
@@ -379,42 +390,42 @@ def resolve_round(name: str, player_point: int, dealer_point: int,
         'push' from the player's perspective.
     """
     if player_blackjack and dealer_blackjack:
-        return 'push', 'Two player blackjack!  ->  Push'
+        return "push", "Two player blackjack!  ->  Push"
     if dealer_blackjack:
-        return 'lose', 'Blackjack! Dealer wins!'
+        return "lose", "Blackjack! Dealer wins!"
     if player_blackjack:
-        return 'win', f'Blackjack! {name} wins!'
+        return "win", f"Blackjack! {name} wins!"
 
-    score_line = f'Dealer: {dealer_point}\t{name}: {player_point}'
+    score_line = f"Dealer: {dealer_point}\t{name}: {player_point}"
 
     if player_bust:
-        return 'lose', f'{name} bust!\n{score_line}  ->  Dealer wins!'
+        return "lose", f"{name} bust!\n{score_line}  ->  Dealer wins!"
     if player_point == dealer_point:
-        return 'push', f'{score_line}  ->  Push'
+        return "push", f"{score_line}  ->  Push"
     if dealer_point > 21:
-        return 'win', f'Dealer bust!\n{score_line}  ->  {name} wins!'
+        return "win", f"Dealer bust!\n{score_line}  ->  {name} wins!"
     if player_point > dealer_point:
-        return 'win', f'{score_line}  ->  {name} wins!'
-    return 'lose', f'{score_line}  ->  Dealer wins!'
+        return "win", f"{score_line}  ->  {name} wins!"
+    return "lose", f"{score_line}  ->  Dealer wins!"
 
 
 def play_game() -> None:
     print("--------- Welcome to Blackjack ---------\n")
 
     # Display the author's details.
-    display_details('main.py', 'Mai Tan Duc', 'ducmai.network@gmail.com')
+    display_details("main.py", "Mai Tan Duc", "ducmai.network@gmail.com")
 
     # Variable initialisation.
-    valid_answers = ['y', 'n']
+    valid_answers = ["y", "n"]
     games = 0
     won = 0
     lost = 0
     tied = 0
 
     # Ask to play.
-    play = ''
+    play = ""
     while play not in valid_answers:
-        play = input('Do you want to play blackjack (y/n): ')
+        play = input("Do you want to play blackjack (y/n): ")
         if play not in valid_answers:
             print("ERROR: Only enter 'y' or 'n'")
 
@@ -444,7 +455,7 @@ def play_game() -> None:
             if player_blackjack or dealer_blackjack:
                 # The round is decided immediately - reveal the
                 # dealer's hidden card so both hands are visible.
-                display_hand('Dealer', dealer_hand)
+                display_hand("Dealer", dealer_hand)
             else:
                 # Neither has Blackjack: the player plays out their
                 # hand first.
@@ -454,19 +465,23 @@ def play_game() -> None:
                 # Reveal the dealer's hidden card either way, but the
                 # dealer only takes further hits if the player didn't
                 # bust - a bust already decides the round.
-                display_hand('Dealer', dealer_hand)
+                display_hand("Dealer", dealer_hand)
                 if not player_bust:
                     dealer_point, _ = dealer_play(dealer_hand)
 
             outcome, message = resolve_round(
-                name, player_point, dealer_point,
-                player_blackjack, dealer_blackjack, player_bust,
+                name,
+                player_point,
+                dealer_point,
+                player_blackjack,
+                dealer_blackjack,
+                player_bust,
             )
             print(message)
 
-            if outcome == 'win':
+            if outcome == "win":
                 won += 1
-            elif outcome == 'lose':
+            elif outcome == "lose":
                 lost += 1
             else:
                 tied += 1
@@ -475,36 +490,40 @@ def play_game() -> None:
             print(f"\n{'-' * 40}\n")
 
             # Ask to play again.
-            again = ''
+            again = ""
             while again not in valid_answers:
-                again = input('Do you want to play again (y/n): ')
+                again = input("Do you want to play again (y/n): ")
                 if again not in valid_answers:
                     print("ERROR: Only enter 'y' or 'n'")
             play = again
             print()
 
         # Summary.
-        print(f'You played {games} games.',
-              f' -> Won:    {won}',
-              f' -> Lost:   {lost}',
-              f' -> Tied:   {tied}',
-              sep='\n',
-              end='\n\n')
+        print(
+            f"You played {games} games.",
+            f" -> Won:    {won}",
+            f" -> Lost:   {lost}",
+            f" -> Tied:   {tied}",
+            sep="\n",
+            end="\n\n",
+        )
 
         # Check for high scores, handle ZeroDivisionError if it occurs.
         try:
-            add_score(name, ((won/(games-tied))*100), TEXT_FILE)
+            add_score(name, ((won / (games - tied)) * 100), TEXT_FILE)
         except ZeroDivisionError as e:
-            print(f'ERROR: "{e}" as the number of games ({games}) ',
-                  f'is equal to to the number of tied ({tied}).')
+            print(
+                f'ERROR: "{e}" as the number of games ({games}) ',
+                f"is equal to to the number of tied ({tied}).",
+            )
 
-        print('Thanks for playing!', end='\n\n')
+        print("Thanks for playing!", end="\n\n")
 
     else:
-        print('Maybe next time...', end='\n\n')
+        print("Maybe next time...", end="\n\n")
 
 
 # --------------------------- Call the Main Function --------------------------
-if __name__ == '__main__':
+if __name__ == "__main__":
     play_game()
     print("---------- See you again soon ----------")

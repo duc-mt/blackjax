@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 ==============================================================================
 Module Name:   test_add_score.py
@@ -43,7 +44,9 @@ def read_lines(path: Any) -> Any:
 
 
 class TestUsesThePassedFilename:
-    def test_writes_to_the_given_file_not_text_file_constant(self: Any, scorefile: Any, monkeypatch: Any) -> None:
+    def test_writes_to_the_given_file_not_text_file_constant(
+        self: Any, scorefile: Any, monkeypatch: Any
+    ) -> None:
         # Point the module constant somewhere that must NOT be written
         # to, to prove add_score() isn't silently falling back to it.
         monkeypatch.setattr(main, "TEXT_FILE", "/nonexistent/should-not-be-used.txt")
@@ -71,7 +74,9 @@ class TestHighScoreComparison:
 
         assert read_lines(scorefile)[0] == "Henry 100.000"
 
-    def test_lower_score_is_appended_not_inserted_first(self: Any, scorefile: Any) -> None:
+    def test_lower_score_is_appended_not_inserted_first(
+        self: Any, scorefile: Any
+    ) -> None:
         scorefile.write_text("Alice 40.000\nBob 30.000\n")
 
         main.add_score("Henry", 10.0, str(scorefile))
@@ -84,14 +89,14 @@ class TestHighScoreComparison:
 class TestDisplayIsNotHardcodedToASpecificPlayer:
     """Regression test for the ['Mike', 0.667] magic check."""
 
-    def test_prints_top_three_generically_no_name_dependency(self: Any, scorefile: Any, capsys: Any) -> None:
+    def test_prints_top_three_generically_no_name_dependency(
+        self: Any, scorefile: Any, capsys: Any
+    ) -> None:
         # None of these names is "Mike" and none of these scores is
         # 0.667 - the old hardcoded check would never fire here, so
         # every single line would get printed instead of just the top
         # three (new score + next two).
-        scorefile.write_text(
-            "Alice 90.000\nBob 80.000\nCarol 70.000\nDave 60.000\n"
-        )
+        scorefile.write_text("Alice 90.000\nBob 80.000\nCarol 70.000\nDave 60.000\n")
 
         main.add_score("Henry", 100.0, str(scorefile))
 
