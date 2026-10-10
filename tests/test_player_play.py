@@ -1,3 +1,16 @@
+"""
+==============================================================================
+Module Name:   test_player_play.py
+Description:   Implementation and logic for test_player_play.
+Author:        Mai Tan Duc <ducmai.network@gmail.com>
+Created:       2026-10-10
+Version:       1.0.0
+License:       MIT
+==============================================================================
+Usage:         python3 test_player_play.py [options]
+Notes:         Requires Python 3.8+
+==============================================================================
+"""
 """Tests for main.player_play().
 
 Whether a hand is a natural (first-two-card) 21 is now decided

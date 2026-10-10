@@ -1,3 +1,16 @@
+"""
+==============================================================================
+Module Name:   test_play_game.py
+Description:   Implementation and logic for test_play_game.
+Author:        Mai Tan Duc <ducmai.network@gmail.com>
+Created:       2026-10-10
+Version:       1.0.0
+License:       MIT
+==============================================================================
+Usage:         python3 test_play_game.py [options]
+Notes:         Requires Python 3.8+
+==============================================================================
+"""
 """Integration tests for the rebuilt play_game() flow.
 
 These exercise main.play_game() end-to-end with a scripted deck and

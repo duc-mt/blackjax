@@ -1,3 +1,16 @@
+"""
+==============================================================================
+Module Name:   test_dealer_play.py
+Description:   Implementation and logic for test_dealer_play.
+Author:        Mai Tan Duc <ducmai.network@gmail.com>
+Created:       2026-10-10
+Version:       1.0.0
+License:       MIT
+==============================================================================
+Usage:         python3 test_dealer_play.py [options]
+Notes:         Requires Python 3.8+
+==============================================================================
+"""
 """Regression tests for main.dealer_play().
 
 The original loop exit condition was gated on the literal string typed
