@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_get_hand_total.py
@@ -19,7 +20,6 @@ valuation (one Ace as 11, the rest as 1) would score higher and be
 legal. Each test names a hand and its correct blackjack value.
 """
 
-from __future__ import annotations
 from typing import Any
 
 import pytest

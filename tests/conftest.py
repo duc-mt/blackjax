@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   conftest.py
@@ -13,7 +14,6 @@ Notes:         Requires Python 3.8+
 """
 """Shared pytest fixtures."""
 
-from __future__ import annotations
 from typing import Any
 
 import pytest

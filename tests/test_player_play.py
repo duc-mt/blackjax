@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_player_play.py
@@ -22,7 +23,6 @@ NOT auto-stop at exactly 21 reached via a hit - the player is still
 asked, and is expected to choose to stand.
 """
 
-from __future__ import annotations
 from typing import Any
 
 from unittest import mock

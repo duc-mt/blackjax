@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_add_score.py
@@ -31,7 +32,6 @@ Covers three bugs found during review:
    "no scores yet".
 """
 
-from __future__ import annotations
 from typing import Any
 
 import main

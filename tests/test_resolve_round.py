@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_resolve_round.py
@@ -18,7 +19,6 @@ play_game() so every branch of the Rules section can be tested directly
 without playing through an entire scripted game.
 """
 
-from __future__ import annotations
 from typing import Any
 
 import main

@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_play_game.py
@@ -28,7 +29,6 @@ matches the documented Algorithm and Rules:
   until reaching 17 or more (zero hits if already there).
 """
 
-from __future__ import annotations
 from typing import Any
 
 from unittest import mock

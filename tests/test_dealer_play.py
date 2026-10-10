@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_dealer_play.py
@@ -21,7 +22,6 @@ until 17" rule. These tests seed card_deck.deck directly (draw_card()
 pops from the end) so the sequence of cards drawn is deterministic.
 """
 
-from __future__ import annotations
 from typing import Any
 
 from unittest import mock
