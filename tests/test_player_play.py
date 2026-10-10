@@ -3,7 +3,7 @@ from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_player_play.py
-Description:   Implementation and logic for test_player_play.
+Description:   Tests for main.player_play().  Whether a hand is a natural (first-two-card) 21 is now decided upstream, in play_game(), before player_play() is ever called - see tests/test_play_game.py's TestPlayerNaturalBlackjack. player_play() itself just implements the turn loop described in the Rules section: keep prompting hit/stand until the player stands, or busts. It does NOT auto-stop at exactly 21 reached via a hit - the player is still asked, and is expected to choose to stand.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
@@ -12,16 +12,6 @@ License:       MIT
 Usage:         python3 test_player_play.py [options]
 Notes:         Requires Python 3.8+
 ==============================================================================
-"""
-"""Tests for main.player_play().
-
-Whether a hand is a natural (first-two-card) 21 is now decided
-upstream, in play_game(), before player_play() is ever called - see
-tests/test_play_game.py's TestPlayerNaturalBlackjack. player_play()
-itself just implements the turn loop described in the Rules section:
-keep prompting hit/stand until the player stands, or busts. It does
-NOT auto-stop at exactly 21 reached via a hit - the player is still
-asked, and is expected to choose to stand.
 """
 
 from typing import Any

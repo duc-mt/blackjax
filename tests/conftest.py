@@ -3,7 +3,7 @@ from __future__ import annotations
 """
 ==============================================================================
 Module Name:   conftest.py
-Description:   Implementation and logic for conftest.
+Description:   Shared pytest fixtures.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
@@ -13,7 +13,6 @@ Usage:         python3 conftest.py [options]
 Notes:         Requires Python 3.8+
 ==============================================================================
 """
-"""Shared pytest fixtures."""
 
 from typing import Any
 

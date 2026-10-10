@@ -3,7 +3,7 @@ from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_resolve_round.py
-Description:   Implementation and logic for test_resolve_round.
+Description:   Unit tests for main.resolve_round().  This is the pure decision logic behind who wins a round, extracted from play_game() so every branch of the Rules section can be tested directly without playing through an entire scripted game.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
@@ -12,12 +12,6 @@ License:       MIT
 Usage:         python3 test_resolve_round.py [options]
 Notes:         Requires Python 3.8+
 ==============================================================================
-"""
-"""Unit tests for main.resolve_round().
-
-This is the pure decision logic behind who wins a round, extracted from
-play_game() so every branch of the Rules section can be tested directly
-without playing through an entire scripted game.
 """
 
 from typing import Any

@@ -3,7 +3,7 @@ from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_dealer_play.py
-Description:   Implementation and logic for test_dealer_play.
+Description:   Regression tests for main.dealer_play().  The original loop exit condition was gated on the literal string typed at the "Press Enter to continue" prompt (`dealer_hit == ''`), not just the dealer's hand total. Any stray non-blank input silently ended the dealer's turn early, even under 17 - violating the "dealer must hit until 17" rule. These tests seed card_deck.deck directly (draw_card() pops from the end) so the sequence of cards drawn is deterministic.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
@@ -12,15 +12,6 @@ License:       MIT
 Usage:         python3 test_dealer_play.py [options]
 Notes:         Requires Python 3.8+
 ==============================================================================
-"""
-"""Regression tests for main.dealer_play().
-
-The original loop exit condition was gated on the literal string typed
-at the "Press Enter to continue" prompt (`dealer_hit == ''`), not just
-the dealer's hand total. Any stray non-blank input silently ended the
-dealer's turn early, even under 17 - violating the "dealer must hit
-until 17" rule. These tests seed card_deck.deck directly (draw_card()
-pops from the end) so the sequence of cards drawn is deterministic.
 """
 
 from typing import Any

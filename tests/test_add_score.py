@@ -3,7 +3,7 @@ from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_add_score.py
-Description:   Implementation and logic for test_add_score.
+Description:   Regression tests for main.add_score().  Covers three bugs found during review:  1. Every open() call inside add_score() hardcoded the module-level    TEXT_FILE constant instead of using the `filename` parameter the    function's own signature and docstring document. In normal play this    was invisible (the one caller always passes TEXT_FILE), but it broke    the documented API and made the function untestable without mutating    the real highscores.txt. 2. The "how many scores to print" logic compared each line to the    literal value ['Mike', 0.667] - a leftover dev fixture - instead of    implementing the "top three" behaviour the surrounding comment    describes. For any real file without that exact entry, every score    got printed instead of just the top three. 3. A missing score file (fresh checkout, or one that's been deleted)    raised an unhandled FileNotFoundError instead of being treated as    "no scores yet".
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
@@ -12,25 +12,6 @@ License:       MIT
 Usage:         python3 test_add_score.py [options]
 Notes:         Requires Python 3.8+
 ==============================================================================
-"""
-"""Regression tests for main.add_score().
-
-Covers three bugs found during review:
-
-1. Every open() call inside add_score() hardcoded the module-level
-   TEXT_FILE constant instead of using the `filename` parameter the
-   function's own signature and docstring document. In normal play this
-   was invisible (the one caller always passes TEXT_FILE), but it broke
-   the documented API and made the function untestable without mutating
-   the real highscores.txt.
-2. The "how many scores to print" logic compared each line to the
-   literal value ['Mike', 0.667] - a leftover dev fixture - instead of
-   implementing the "top three" behaviour the surrounding comment
-   describes. For any real file without that exact entry, every score
-   got printed instead of just the top three.
-3. A missing score file (fresh checkout, or one that's been deleted)
-   raised an unhandled FileNotFoundError instead of being treated as
-   "no scores yet".
 """
 
 from typing import Any

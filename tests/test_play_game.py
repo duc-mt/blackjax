@@ -3,7 +3,7 @@ from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_play_game.py
-Description:   Implementation and logic for test_play_game.
+Description:   Integration tests for the rebuilt play_game() flow.  These exercise main.play_game() end-to-end with a scripted deck and scripted input, checking that the deal/blackjack-check/turn-order matches the documented Algorithm and Rules:  - Both hands are dealt two cards; only the dealer's first card is shown   until the dealer's hand is revealed. - A natural (first-two-card) 21 for either side resolves the round   immediately, with no hit/stand prompt. - If neither has Blackjack, the player plays first; if the player   busts, the round is lost immediately and the dealer does not take a   turn at all. - Otherwise the dealer's hidden card is revealed and the dealer hits   until reaching 17 or more (zero hits if already there).
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
@@ -12,22 +12,6 @@ License:       MIT
 Usage:         python3 test_play_game.py [options]
 Notes:         Requires Python 3.8+
 ==============================================================================
-"""
-"""Integration tests for the rebuilt play_game() flow.
-
-These exercise main.play_game() end-to-end with a scripted deck and
-scripted input, checking that the deal/blackjack-check/turn-order
-matches the documented Algorithm and Rules:
-
-- Both hands are dealt two cards; only the dealer's first card is shown
-  until the dealer's hand is revealed.
-- A natural (first-two-card) 21 for either side resolves the round
-  immediately, with no hit/stand prompt.
-- If neither has Blackjack, the player plays first; if the player
-  busts, the round is lost immediately and the dealer does not take a
-  turn at all.
-- Otherwise the dealer's hidden card is revealed and the dealer hits
-  until reaching 17 or more (zero hits if already there).
 """
 
 from typing import Any
