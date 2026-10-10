@@ -14,7 +14,6 @@
 # ------------------------------- Module Import -------------------------------
 from random import shuffle
 
-
 # ------------------------------ Global Constant ------------------------------
 # Contains cards in the format [value, suit]
 # DO NOT ACCESS THIS VARIABLE!

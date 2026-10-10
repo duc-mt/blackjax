@@ -16,7 +16,6 @@
 
 import card_deck
 
-
 # ------------------------------ Global Constant ------------------------------
 TEXT_FILE = "highscores.txt"
 

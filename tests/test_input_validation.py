@@ -14,8 +14,8 @@ Notes:         Requires Python 3.8+
 """
 
 from __future__ import annotations
-from typing import Any
 
+from typing import Any
 from unittest import mock
 
 import main
